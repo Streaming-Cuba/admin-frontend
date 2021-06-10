@@ -14,4 +14,8 @@ export default makeStyles((theme) => ({
     width: theme.spacing(14),
     height: theme.spacing(14),
   },
+  xl: {
+    width: theme.spacing(20),
+    height: theme.spacing(20),
+  },
 }));

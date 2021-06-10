@@ -25,6 +25,7 @@ export default function UserAvatar(props: UserAvatarProps) {
         src={cover}
         className={clsx({
           [classes.lg]: props.size === "lg",
+          [classes.xl]: props.size === "xl",
           [classes.normal]: !props.size,
         })}
       />
@@ -46,6 +47,6 @@ export default function UserAvatar(props: UserAvatarProps) {
 interface UserAvatarProps {
   color?: Color;
   name?: string;
-  [item: string]: any;
-  size?: "lg";
+  size?: "lg" | "xl";
+  [item: string]: any;  
 }
