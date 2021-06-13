@@ -1,0 +1,74 @@
+name: Deploy to Production
+ 
+on:
+  push:
+    - 'master'
+    #tags:
+      
+env: 
+  REACT_APP_PLATFORM_URL:https://eventos.streamingcuba.com
+  REACT_APP_API_URL: http://apistreamingcuba.herokuapp.com
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+          
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+         node-version: 14.x
+         
+      - name: Installing dependencies 🏗
+        run: npm install 
+
+      - name: Create env variables
+        run: |
+          echo "REACT_APP_PLATFORM_URL=${{ env.REACT_APP_PLATFORM_URL }}" >> .env
+          echo "REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}" >> .env
+        
+      - name: Building 🛠
+        run: npm run build
+
+      - name: Copying build assets
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: .build
+          remote: /home/streaming/apps/admin-frontend/build
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          rmRemote: true
+          atomicPut: true
+          dotfiles: true
+          verbose: true
+
+      - name: Copying .env file
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: .env
+          remote: /home/streaming/apps/admin-frontend/.env
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          rmRemote: true
+          atomicPut: true
+          dotfiles: true
+          verbose: true
+
+      - name: Post deploy SSH Remote Commands
+        uses: appleboy/ssh-action@v0.1.4
+        with:        
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          timeout: 60s
+          debug: true
+          script: sudo sh /home/streaming/apps/admin-frontend/deploy.sh
+
+
