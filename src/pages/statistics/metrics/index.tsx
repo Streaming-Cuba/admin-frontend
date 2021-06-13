@@ -18,15 +18,17 @@ import DateFnsUtils from '@date-io/date-fns';
 import esLocale from "date-fns/locale/es";
 import {useServerManager} from "../../../components/ServerManagerProvider";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import moment from "moment";
+import {format, parseISO} from "date-fns"
 import Video from "../../../types/Video";
 import VideosInfo from "../../../types/VideosInfo";
+import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
 
 
-export default function Metrics () {
+
+function Metrics () {
     const serverManager = useServerManager();
+    const {enqueueSnackbar} = useSnackbar();
 
-    const [total, setTotal] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [pageSize, setPageSize] = useState<number>(10);
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -74,7 +76,7 @@ export default function Metrics () {
                 flex: 0.3,
             },
             {
-                field: "length",
+                field: "duration",
                 headerName: "Duración",
                 disableColumnMenu: true,
                 sortable: false,
@@ -84,25 +86,52 @@ export default function Metrics () {
     }, [videosInfo.videos]);
 
 
+    //se que esta no es la mejor forma pero fue lo mas rapido que se me ocurrió
+    ////TODO cambiar por alguna fora de parseo de date-fns
+    const secondsToString = (seconds: number) : string => {
+        const second = (Math.round(seconds % 0x3C)).toString();
+        const hour    = (Math.floor(seconds / 0xE10)).toString();
+        const minute  = (Math.floor(seconds / 0x3C ) % 0x3C).toString();
+
+        return hour + ':' + minute + ':' + second;
+    }
+
     const loadInfo = () => {
         if (since !== null && until !== null){
             setLoading(true)
             serverManager
                 .loadVideosInfo(
-                    moment(since).format("YYYY-MM-DD"),
-                    moment(until).format("YYYY-MM-DD")
+                    format(since, "yyyy-MM-dd"),
+                    format(until,"yyyy-MM-dd")
                 )
                 .then(r => {
                     r.data.videos.forEach((video:Video, index) => {
                         video.id = index
-                        video.date = moment(video.date).format("DD-MM-YYYY")
+                        video.date = format(parseISO(video.date),"dd-MM-yyyy")
+                        video.duration = secondsToString(video.length)
                     })
                     setVideosInfo(r.data)
-                    setTotal(r.data.videos_count)
+                })
+                .catch( () => {
+                    handleClickVariant("Error en el rango de fecha", "error")()
+                    setVideosInfo({
+                        videos_count: 0,
+                        total_reach: 0,
+                        total_views: 0,
+                        total_countries: 0,
+                        total_regions: 0,
+                        videos: [],
+                        rankingByRegion: {},
+                        rankingByCountry: {}
+                    })
                 })
                 .finally(() => setLoading(false))
         }
     }
+
+    const handleClickVariant = (text: string, variant: VariantType) => () => {
+        enqueueSnackbar(text, { variant });
+    };
 
 
     useEffect(() => {
@@ -146,7 +175,7 @@ export default function Metrics () {
                 <DataGrid
                     rows={videosInfo.videos}
                     columns={columns}
-                    rowCount={total}
+                    rowCount={videosInfo.videos_count}
                     page={currentPage}
                     pageSize={pageSize}
                     onPageChange={(params) => {
@@ -166,7 +195,7 @@ export default function Metrics () {
                         NoRowsOverlay: GridNoRowsOverlay,
                     }}
                 />
-                <Grid container aria-orientation={"horizontal"}>
+                <Grid container aria-orientation={"horizontal"} style={{padding: 5}} >
                     <Grid item xs={4} md={4} style={{padding: 5}}>
                         <TableContainer>
                             <Table title={"Totales"}>
@@ -278,3 +307,10 @@ export default function Metrics () {
     )
 }
 
+export default function MetricWithSnack () {
+    return(
+        <SnackbarProvider maxSnack={3}>
+            <Metrics/>
+        </SnackbarProvider>
+    )
+}
