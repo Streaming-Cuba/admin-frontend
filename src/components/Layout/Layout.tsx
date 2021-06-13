@@ -20,6 +20,7 @@ import Dashboard from "../../pages/dashboard";
 import { CircularProgress, Typography } from "@material-ui/core";
 import EventEdit from "../../pages/events/event-edit";
 import StatisticsVotes from "../../pages/statistics/votes";
+import StatisticsMetrics from "../../pages/statistics/metrics";
 import Account from "../../pages/account/account";
 import Settings from "../../pages/account/settings";
 
@@ -69,6 +70,7 @@ function Layout(props: LayoutProps) {
         <PrivateRoute component={Accounts} path={Paths.Accounts} exact/>
         <PrivateRoute component={Roles} path={Paths.Roles} exact/>
         <PrivateRoute component={StatisticsVotes} path={Paths.StatisticsVotes} exact/>
+        <PrivateRoute component={StatisticsMetrics} path={Paths.StatisticsMetrics} exact/>
         <PrivateRoute component={Account} path={Paths.Account} exact/>
         <PrivateRoute component={Settings} path={Paths.Settings} exact/>
       </div>

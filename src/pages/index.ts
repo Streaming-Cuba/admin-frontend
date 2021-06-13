@@ -9,6 +9,7 @@ export const Paths = {
   Accounts: "/security/accounts",
   Roles: "/security/roles",
   StatisticsVotes: "/statistics/votes",
+  StatisticsMetrics: "/statistics/metrics",
   SignIn: "/sign-in",
   Account: "/account",
   Settings: "/account/settings",

@@ -1,12 +1,13 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import axios, {AxiosInstance, AxiosResponse} from "axios";
 import Event from "../../types/Event";
 import { getToken } from "../../redux/store";
 import MediaItem from "../../types/MediaItem";
 import Account from "../../types/Account";
 import Role from "../../types/Role";
 import Vote from "../../types/Vote";
+import VideosInfo from "../../types/VideosInfo";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_IS_IN_DEVELOPMENT === "true" ? process.env.REACT_APP_DEPLOY_URL : process.env.REACT_APP_API_URL;
 
 class ServerManager {
   apiAxios: AxiosInstance;
@@ -108,6 +109,11 @@ class ServerManager {
   loadEventByIdentifier(identifier: string): Promise<AxiosResponse<Event>> {
     let url = `/api/v1/event/${identifier}`;
     return this.apiAxios.get<Event>(url);
+  }
+
+  loadVideosInfo(since: string, until: string): Promise<AxiosResponse<VideosInfo>> {
+    let  url = `/api/v1/facebook/videos-info?since=${since}&until=${until}`;
+    return this.apiAxios.get<VideosInfo>(url)
   }
 }
 
