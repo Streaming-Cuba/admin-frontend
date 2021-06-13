@@ -1,0 +1,38 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+env: 
+  REACT_APP_PLATFORM_URL: https://eventos.streamingcuba.com
+  REACT_APP_API_URL: https://api.eventos.streamingcuba.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Send Telegram notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.PERSONAL_TELEGRAM_USER_ID }}
+          token: ${{ secrets.NOTIFICATIONS_TELEGRAM_BOT_TOKEN }}
+
+      - name: Create env variables
+        run: |
+          echo "REACT_APP_PLATFORM_URL=${{ env.REACT_APP_PLATFORM_URL }}" >> .env.local
+          echo "REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}" >> .env.local
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        name: Deploying to Heroku
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_TOKEN }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          useforce: true
+          dynamicFiles: false
+          env_file: ".env.local"
+          procfile: "web: npm run start"
