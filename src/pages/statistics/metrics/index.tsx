@@ -3,7 +3,18 @@ import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
 import {DataGrid, GridColDef} from "@material-ui/data-grid";
 import PageTitle from "../../../components/PageTitle";
-import {Box, Button, Grid,} from "@material-ui/core";
+import {
+    Box, Collapse,
+    Grid,
+    IconButton,
+    List,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow, Typography
+} from "@material-ui/core";
 import { KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import esLocale from "date-fns/locale/es";
@@ -11,9 +22,10 @@ import {useServerManager} from "../../../components/ServerManagerProvider";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
 import Video from "../../../types/Video";
+import VideosInfo from "../../../types/VideosInfo";
+
 
 export default function Metrics () {
-
     const serverManager = useServerManager();
 
     const [total, setTotal] = useState<number>(0);
@@ -22,7 +34,18 @@ export default function Metrics () {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [since, setSince] = useState<MaterialUiPickersDate>(null)
     const [until, setUntil] = useState<MaterialUiPickersDate>(null)
-    const [videos, setVideos] = useState<Video[]>([])
+    const [videosInfo, setVideosInfo] = useState<VideosInfo>({
+        videos_count: 0,
+        total_reach: 0,
+        total_views: 0,
+        total_countries: 0,
+        total_regions: 0,
+        videos: [],
+        rankingByRegion: {},
+        rankingByCountry: {}
+    })
+    const [isOpenCountries, setIsOpenCountries] = useState<boolean>(false)
+    const [isOpenRegions, setIsOpenRegions] = useState<boolean>(false)
 
     const columns = useMemo<GridColDef[]>(() => {
         return [
@@ -62,7 +85,7 @@ export default function Metrics () {
                 flex: 0.3,
             },
         ];
-    }, [videos]);
+    }, [videosInfo.videos]);
 
 
     const loadInfo = () => {
@@ -78,12 +101,13 @@ export default function Metrics () {
                         video.id = index
                         video.date = moment(video.date).format("DD-MM-YYYY")
                     })
-                    setVideos(r.data.videos)
+                    setVideosInfo(r.data)
                     setTotal(r.data.videos_count)
                 })
                 .finally(() => setLoading(false))
         }
     }
+
 
     useEffect(() => {
         loadInfo()
@@ -124,7 +148,7 @@ export default function Metrics () {
                     </Box>
                 </PageTitle>
                 <DataGrid
-                    rows={videos}
+                    rows={videosInfo.videos}
                     columns={columns}
                     rowCount={total}
                     page={currentPage}
@@ -146,7 +170,115 @@ export default function Metrics () {
                         NoRowsOverlay: GridNoRowsOverlay,
                     }}
                 />
+                <Grid container aria-orientation={"horizontal"}>
+                    <Grid item xs={4} md={4} style={{padding: 5}}>
+                        <TableContainer>
+                            <Table title={"Totales"}>
+                                <TableHead>
+                                    <Typography>
+                                        Totales
+                                    </Typography>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>
+                                            Total de Videos
+                                        </TableCell>
+                                        <TableCell>
+                                            {videosInfo.videos_count}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Alcance Total:
+                                        </TableCell>
+                                        <TableCell>
+                                            {videosInfo.total_reach}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Total de Vistas:
+                                        </TableCell>
+                                        <TableCell>
+                                            {videosInfo.total_views}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Total de Paises:
+                                        </TableCell>
+                                        <TableCell>
+                                            {videosInfo.total_countries}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Total de Regiones:
+                                        </TableCell>
+                                        <TableCell>
+                                            {videosInfo.total_regions}
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
+                    <Grid item xs={4} md={4} style={{padding: 5}}>
+                        <Table>
+                            <TableHead>
+                                <Typography>
+                                    5 Paises con mas vistas
+                                </Typography>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    Object.keys(videosInfo.rankingByCountry).splice(0,5).map((value, index) => {
+                                            return (
+                                                <TableRow key={index}>
+                                                    <TableCell>
+                                                        {value}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {videosInfo.rankingByCountry[value]}
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        }
+                                    )
+                                }
+                            </TableBody>
+                        </Table>
+                    </Grid>
+                    <Grid item xs={4} md={4} style={{padding: 5}}>
+                        <Table>
+                            <TableHead>
+                                <Typography>
+                                    5 Regiones con mas vistas
+                                </Typography>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    Object.keys(videosInfo.rankingByRegion).splice(0,5).map((value, index) => {
+                                            return (
+                                                <TableRow key={index}>
+                                                    <TableCell>
+                                                        {value}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {videosInfo.rankingByRegion[value]}
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        }
+                                    )
+                                }
+                            </TableBody>
+                        </Table>
+                    </Grid>
+                </Grid>
             </div>
         </MuiPickersUtilsProvider>
     )
 }
+
