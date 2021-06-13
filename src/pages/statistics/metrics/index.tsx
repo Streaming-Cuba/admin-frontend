@@ -4,10 +4,8 @@ import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
 import {DataGrid, GridColDef} from "@material-ui/data-grid";
 import PageTitle from "../../../components/PageTitle";
 import {
-    Box, Collapse,
+    Box,
     Grid,
-    IconButton,
-    List,
     Table,
     TableBody,
     TableCell,
@@ -44,8 +42,6 @@ export default function Metrics () {
         rankingByRegion: {},
         rankingByCountry: {}
     })
-    const [isOpenCountries, setIsOpenCountries] = useState<boolean>(false)
-    const [isOpenRegions, setIsOpenRegions] = useState<boolean>(false)
 
     const columns = useMemo<GridColDef[]>(() => {
         return [
