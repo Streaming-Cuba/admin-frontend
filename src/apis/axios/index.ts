@@ -7,7 +7,7 @@ import Role from "../../types/Role";
 import Vote from "../../types/Vote";
 import VideosInfo from "../../types/VideosInfo";
 
-const API_URL = process.env.REACT_APP_IS_IN_DEVELOPMENT === "true" ? process.env.REACT_APP_DEPLOY_URL : process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 class ServerManager {
   apiAxios: AxiosInstance;

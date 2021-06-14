@@ -47,7 +47,7 @@ const structure = [
     icon: <ChartLineIcon />,
     children: [
       { label: "Votos", link: Paths.StatisticsVotes },
-      { label: "Métricas", link: Paths.StatisticsMetrics}
+      { label: "Métricas de Facebook", link: Paths.StatisticsMetrics}
     ],
   },
   {
