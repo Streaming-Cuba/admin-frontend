@@ -1,6 +1,6 @@
 type Video = {
     id?: number,
-    title: string,
+    title?: string,
     date: string,
     reach: number,
     views: number,
