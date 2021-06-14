@@ -185,7 +185,6 @@ function Metrics () {
                         setPageSize(params.pageSize);
                     }}
                     rowsPerPageOptions={[10, 25, 50]}
-                    paginationMode="server"
                     pagination
                     loading={isLoading}
                     autoHeight
