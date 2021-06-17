@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Box, Grid, TextField,} from "@material-ui/core";
-import {useTheme} from "@material-ui/styles";
 import PageTitle from "../../../components/PageTitle";
-import useStyles from "./styles";
 import {useServerManager} from "../../../components/ServerManagerProvider";
 import Event from "../../../types/Event";
-import {useHistory, useParams} from "react-router";
+import {useParams} from "react-router";
 import FroalaEditor from "react-froala-wysiwyg";
 import "froala-editor/js/froala_editor.pkgd.min.js";
 import "froala-editor/css/froala_style.min.css";
@@ -13,9 +11,9 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 import LoadingOverlay from "../../../components/LoadingOverlay";
 
 function EventEdit() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const history = useHistory();
+  //const classes = useStyles();
+  //const theme = useTheme();
+  //const history = useHistory();
   const serverManager = useServerManager();
 
   const params = useParams<{ identifier: string }>();
@@ -33,7 +31,7 @@ function EventEdit() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [params.identifier, serverManager]);
 
   const handleModelChange = () => {
   };

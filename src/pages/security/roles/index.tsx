@@ -1,14 +1,10 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, {useMemo, useState, useEffect, useCallback} from "react";
 import { DataGrid, GridCellParams, GridColDef } from "@material-ui/data-grid";
 import { Tooltip, IconButton, Box } from "@material-ui/core";
-
 import PageTitle from "../../../components/PageTitle";
 import {
   Refresh as RefreshIcon,
   MoreVert as MoreVertIcon,
-  Edit as EditIcon,
-  OpenInNew as OpenInNewIcon,
-  Description as DescriptionIcon,
 } from "@material-ui/icons";
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
@@ -23,7 +19,7 @@ function Roles() {
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     setLoading(true);
     serverManager
       .loadRoles(currentPage, pageSize)
@@ -33,11 +29,11 @@ function Roles() {
       .finally(() => {
         setLoading(false);
       });
-  };
+  },[currentPage, pageSize, serverManager]);
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [refresh]);
 
   const columns = useMemo<GridColDef[]>(() => {
     return [
@@ -61,7 +57,7 @@ function Roles() {
         align: "right",
         disableColumnMenu: true,
         flex: 0.3,
-        renderCell: (params: GridCellParams) => {
+        renderCell: () => {
           return (
             <IconButton>
               <MoreVertIcon />

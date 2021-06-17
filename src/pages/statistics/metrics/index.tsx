@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
-import {DataGrid, GridCellParams, GridColDef} from "@material-ui/data-grid";
+import {DataGrid, GridColDef} from "@material-ui/data-grid";
 import PageTitle from "../../../components/PageTitle";
 import {
   Box, Button,
@@ -124,7 +124,11 @@ function Metrics() {
     return hour + ":" + minute + ":" + second;
   };
 
-  const loadInfo = () => {
+  const handleClickVariant = useCallback((text: string, variant: VariantType) => () => {
+    enqueueSnackbar(text, { variant });
+  }, [enqueueSnackbar]);
+  
+  const loadInfo = useCallback(() => {
     if (dateRange[0] !== null && dateRange[1] !== null) {
       setLoading(true);
       serverManager
@@ -172,15 +176,11 @@ function Metrics() {
         })
         .finally(() => setLoading(false));
     }
-  };
-
-  const handleClickVariant = (text: string, variant: VariantType) => () => {
-    enqueueSnackbar(text, { variant });
-  };
-
+  }, [dateRange, handleClickVariant, serverManager]);
+  
   useEffect(() => {
     loadInfo();
-  }, [dateRange]);
+  }, [dateRange, loadInfo]);
 
   return (
       <div>
