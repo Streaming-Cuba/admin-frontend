@@ -87,7 +87,7 @@ export default function TotalDialog (props: TotalDialogProps): JSX.Element {
                 <Grid item xs={4} md={4} style={{ padding: 5 }}>
                     <Table>
                         <TableHead>
-                            <Typography>5 Paises con mas vistas</Typography>
+                            <Typography>5 Paises con mas tiempo de reproducción</Typography>
                         </TableHead>
                         <TableBody>
                             {Object.keys(props.videosInfo.rankingByCountry)
@@ -111,7 +111,7 @@ export default function TotalDialog (props: TotalDialogProps): JSX.Element {
                 <Grid item xs={4} md={4} style={{ padding: 5 }}>
                     <Table>
                         <TableHead>
-                            <Typography>5 Regiones con mas vistas</Typography>
+                            <Typography>5 Regiones con mas tiempo de reproducción</Typography>
                         </TableHead>
                         <TableBody>
                             {Object.keys(props.videosInfo.rankingByRegion)
