@@ -112,7 +112,7 @@ function Metrics() {
         )
       }
     ];
-  }, [videosInfo.videos]);
+  }, []);
 
   //se que esta no es la mejor forma pero fue lo mas rapido que se me ocurrió
   ////TODO cambiar por alguna fora de parseo de date-fns

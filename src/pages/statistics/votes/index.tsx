@@ -99,7 +99,7 @@ function StatisticsVotes() {
       },
       
     ];
-  }, [votes]);
+  }, []);
 
   return (
     <div>
