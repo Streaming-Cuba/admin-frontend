@@ -1,18 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
-import { DataGrid, GridColDef } from "@material-ui/data-grid";
+import {DataGrid, GridCellParams, GridColDef} from "@material-ui/data-grid";
 import PageTitle from "../../../components/PageTitle";
 import {
-  Box,
+  Box, Button,
   Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
   TextField,
 } from "@material-ui/core";
 import {
@@ -20,25 +13,28 @@ import {
   DateRangeDelimiter,
   MobileDateRangePicker,
 } from "@material-ui/pickers";
-
 import { useServerManager } from "../../../components/ServerManagerProvider";
-//import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { format, parseISO } from "date-fns";
-
 import Video from "../../../types/Video";
 import VideosInfo from "../../../types/VideosInfo";
 import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
+import DemographicDialog from "../../../components/DemographicDialog";
+import {
+  MoreOutlined as MoreIcon
+} from "@material-ui/icons"
+import useStyles from "./styles";
+import TotalDialog from "../../../components/TotalsDialog";
+import ParseDemographic from "../../../types/ParseDemographic";
 
 function Metrics() {
   const serverManager = useServerManager();
   const { enqueueSnackbar } = useSnackbar();
+  const classes = useStyles()
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
   const [isLoading, setLoading] = useState<boolean>(false);
-  //const [since, setSince] = useState<MaterialUiPickersDate>(null);
   const [dateRange, setDateRange] = useState<DateRange<any>>([null, null]);
-  //const [until, setUntil] = useState<MaterialUiPickersDate>(null);
   const [videosInfo, setVideosInfo] = useState<VideosInfo>({
     videos_count: 0,
     total_reach: 0,
@@ -49,6 +45,24 @@ function Metrics() {
     rankingByRegion: {},
     rankingByCountry: {},
   });
+  const [isOpenDemographicDialog, setIsOpenDemographicDialog] = useState<boolean>(false)
+  const [demographicData, setDemographicData] = useState<ParseDemographic>({
+    "F.13-17": "0",
+    "F.18-24": "0",
+    "F.25-34": "0",
+    "F.35-44": "0",
+    "F.45-54": "0",
+    "F.55-64": "0",
+    "F.65+": "0",
+    "M.13-17": "0",
+    "M.18-24": "0",
+    "M.25-34": "0",
+    "M.35-44": "0",
+    "M.45-54": "0",
+    "M.55-64": "0",
+    "M.65+": "0"
+  })
+  const [isOpenTotalDialog, setIsOpenTotalDialog] = useState<boolean>(false)
 
   const columns = useMemo<GridColDef[]>(() => {
     return [
@@ -87,6 +101,16 @@ function Metrics() {
         sortable: false,
         flex: 0.3,
       },
+      {
+        field: "more",
+        headerName: "Mas",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 0.18,
+        renderCell: () => (
+              <MoreIcon/>
+        )
+      }
     ];
   }, [videosInfo.videos]);
 
@@ -113,6 +137,23 @@ function Metrics() {
             video.id = index;
             video.date = format(parseISO(video.date), "dd-MM-yyyy");
             video.duration = secondsToString(video.length);
+            video.more = "Demografía";
+            video.parsedDemographic = {
+              "F.13-17": secondsToString(video.demographic["F.13-17"] / 1000),
+              "F.18-24": secondsToString(video.demographic["F.18-24"] / 1000),
+              "F.25-34": secondsToString(video.demographic["F.25-34"] / 1000),
+              "F.35-44": secondsToString(video.demographic["F.35-44"] / 1000),
+              "F.45-54": secondsToString(video.demographic["F.45-54"] / 1000),
+              "F.55-64": secondsToString(video.demographic["F.55-64"] / 1000),
+              "F.65+": secondsToString(video.demographic["F.65+"] / 1000),
+              "M.13-17": secondsToString(video.demographic["M.13-17"] / 1000),
+              "M.18-24": secondsToString(video.demographic["M.18-24"] / 1000),
+              "M.25-34": secondsToString(video.demographic["M.25-34"] / 1000),
+              "M.35-44": secondsToString(video.demographic["M.35-44"] / 1000),
+              "M.45-54": secondsToString(video.demographic["M.45-54"] / 1000),
+              "M.55-64": secondsToString(video.demographic["M.55-64"] / 1000),
+              "M.65+": secondsToString(video.demographic["M.65+"] / 1000)
+            }
           });
           setVideosInfo(r.data);
         })
@@ -142,135 +183,91 @@ function Metrics() {
   }, [dateRange]);
 
   return (
-    <div>
-      <PageTitle title="Estadisticas: Métricas de los Videos" />
-
-      <Box marginBottom={5}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} sm={6}>
-            <MobileDateRangePicker
-              startText="Desde"
-              inputFormat="dd-MM-yyyy"
-              toolbarFormat="dd-MM-yyyy"
-              endText="Hasta"
-              value={dateRange}
-              allowSameDateSelection={true}
-              onChange={(newValue) => setDateRange(newValue)}
-              renderInput={(startProps, endProps) => (
-                <React.Fragment>
-                  <TextField {...startProps} helperText="" fullWidth />
-                  <DateRangeDelimiter> a </DateRangeDelimiter>
-                  <TextField {...endProps} helperText="" fullWidth />
-                </React.Fragment>
-              )}
-            />
+      <div>
+        <PageTitle title="Estadisticas: Métricas de los Videos" />
+        <DemographicDialog isOpen={isOpenDemographicDialog} videoDemographic={demographicData} onClose={() => setIsOpenDemographicDialog(false)}/>
+        <TotalDialog videosInfo={videosInfo} isOpen={isOpenTotalDialog} onClose={() => setIsOpenTotalDialog(false)}/>
+        <Box marginBottom={5}>
+          <Grid container spacing={4} className={classes.gridContainer}>
+            <Grid item xs={12} sm={6}>
+              <MobileDateRangePicker
+                  startText="Desde"
+                  inputFormat="dd-MM-yyyy"
+                  toolbarFormat="dd-MM-yyyy"
+                  endText="Hasta"
+                  value={dateRange}
+                  allowSameDateSelection={true}
+                  onChange={(newValue) => setDateRange(newValue)}
+                  renderInput={(startProps, endProps) => (
+                      <React.Fragment>
+                        <TextField {...startProps} helperText="" fullWidth />
+                        <DateRangeDelimiter> a </DateRangeDelimiter>
+                        <TextField {...endProps} helperText="" fullWidth />
+                      </React.Fragment>
+                  )}
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                  variant={"outlined"}
+                  onClick={() => setIsOpenTotalDialog(true)}
+              >
+                Totales
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-
-      <DataGrid
-        rows={videosInfo.videos}
-        columns={columns}
-        rowCount={videosInfo.videos_count}
-        page={currentPage}
-        pageSize={pageSize}
-        onPageChange={(params) => {
-          setCurrentPage(params.page);
-        }}
-        onPageSizeChange={(params) => {
-          setPageSize(params.pageSize);
-        }}
-        rowsPerPageOptions={[10, 25, 50]}
-        pagination
-        loading={isLoading}
-        autoHeight
-        disableSelectionOnClick
-        components={{
-          LoadingOverlay: GridLoadingOverlay,
-          NoRowsOverlay: GridNoRowsOverlay,
-        }}
-      />
-      {/* <Grid container aria-orientation={"horizontal"} style={{ padding: 5 }}>
-        <Grid item xs={4} md={4} style={{ padding: 5 }}>
-          <TableContainer>
-            <Table title={"Totales"}>
-              <TableHead>
-                <Typography>Totales</Typography>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Total de Videos</TableCell>
-                  <TableCell>{videosInfo.videos_count}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Alcance Total:</TableCell>
-                  <TableCell>{videosInfo.total_reach}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Total de Vistas:</TableCell>
-                  <TableCell>{videosInfo.total_views}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Total de Paises:</TableCell>
-                  <TableCell>{videosInfo.total_countries}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Total de Regiones:</TableCell>
-                  <TableCell>{videosInfo.total_regions}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-        <Grid item xs={4} md={4} style={{ padding: 5 }}>
-          <Table>
-            <TableHead>
-              <Typography>5 Paises con mas vistas</Typography>
-            </TableHead>
-            <TableBody>
-              {Object.keys(videosInfo.rankingByCountry)
-                .splice(0, 5)
-                .map((value, index) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell>{value}</TableCell>
-                      <TableCell>
-                        {videosInfo.rankingByCountry[value]}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </Grid>
-        <Grid item xs={4} md={4} style={{ padding: 5 }}>
-          <Table>
-            <TableHead>
-              <Typography>5 Regiones con mas vistas</Typography>
-            </TableHead>
-            <TableBody>
-              {Object.keys(videosInfo.rankingByRegion)
-                .splice(0, 5)
-                .map((value, index) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell>{value}</TableCell>
-                      <TableCell>{videosInfo.rankingByRegion[value]}</TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </Grid>
-      </Grid> */}
-    </div>
+        </Box>
+        <DataGrid
+            rows={videosInfo.videos}
+            columns={columns}
+            rowCount={videosInfo.videos_count}
+            page={currentPage}
+            pageSize={pageSize}
+            onPageChange={(params) => {
+              setCurrentPage(params.page);
+            }}
+            onPageSizeChange={(params) => {
+              setPageSize(params.pageSize);
+            }}
+            rowsPerPageOptions={[10, 25, 50]}
+            pagination
+            loading={isLoading}
+            autoHeight
+            disableSelectionOnClick
+            onCellClick={((param) => {
+              if(param.field === "more"){
+                setDemographicData({
+                  "F.13-17": secondsToString(param.row.demographic["F.13-17"]/1000),
+                  "F.18-24": secondsToString(param.row.demographic["F.18-24"]/1000),
+                  "F.25-34": secondsToString(param.row.demographic["F.25-34"]/1000),
+                  "F.35-44": secondsToString(param.row.demographic["F.35-44"]/1000),
+                  "F.45-54": secondsToString(param.row.demographic["F.45-54"]/1000),
+                  "F.55-64": secondsToString(param.row.demographic["F.55-64"]/1000),
+                  "F.65+": secondsToString(param.row.demographic["F.65+"]/1000),
+                  "M.13-17": secondsToString(param.row.demographic["M.13-17"]/1000),
+                  "M.18-24": secondsToString(param.row.demographic["M.18-24"]/1000),
+                  "M.25-34": secondsToString(param.row.demographic["M.25-34"]/1000),
+                  "M.35-44": secondsToString(param.row.demographic["M.35-44"]/1000),
+                  "M.45-54": secondsToString(param.row.demographic["M.45-54"]/1000),
+                  "M.55-64": secondsToString(param.row.demographic["M.55-64"]/1000),
+                  "M.65+": secondsToString(param.row.demographic["M.65+"]/1000)
+                })
+                setIsOpenDemographicDialog(true)
+              }
+            })}
+            components={{
+              LoadingOverlay: GridLoadingOverlay,
+              NoRowsOverlay: GridNoRowsOverlay,
+            }}
+        />
+      </div>
   );
 }
 
 export default function MetricWithSnack() {
   return (
-    <SnackbarProvider maxSnack={3}>
-      <Metrics />
-    </SnackbarProvider>
+      <SnackbarProvider maxSnack={3}>
+        <Metrics />
+      </SnackbarProvider>
   );
 }

@@ -9,13 +9,14 @@ import ServerManagerProvider from "./components/ServerManagerProvider";
 import PublicRoute from "./components/Routes/PublicRoute";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import { LocalizationProvider } from "@material-ui/pickers";
+import esLocale from "date-fns/locale/es";
 
 import { SignIn, Paths } from "./pages";
 import Layout from "./components/Layout";
 
 function App() {
   return (
-    <LocalizationProvider dateAdapter={DateFnsAdapter}>
+    <LocalizationProvider dateAdapter={DateFnsAdapter} locale={esLocale}>
       <Provider store={store}>
         <ServerManagerProvider>
           <ThemeProvider theme={theme}>
