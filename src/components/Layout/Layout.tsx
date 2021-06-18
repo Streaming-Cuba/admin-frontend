@@ -22,6 +22,7 @@ import StatisticsVotes from "../../pages/statistics/votes";
 import StatisticsMetrics from "../../pages/statistics/metrics";
 import Account from "../../pages/account/account";
 import Settings from "../../pages/account/settings";
+import RedirectToDashboard from "../../pages/redirect";
 
 function Layout(props: LayoutProps) {
   const classes = useStyles();
@@ -72,6 +73,7 @@ function Layout(props: LayoutProps) {
         <PrivateRoute component={StatisticsMetrics} path={Paths.StatisticsMetrics} exact/>
         <PrivateRoute component={Account} path={Paths.Account} exact/>
         <PrivateRoute component={Settings} path={Paths.Settings} exact/>
+        <PrivateRoute component={RedirectToDashboard} path={Paths.Redirect} exact />
       </div>
     </div>
   );

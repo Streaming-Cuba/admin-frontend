@@ -20,7 +20,7 @@ import VideosInfo from "../../../types/VideosInfo";
 import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 import DemographicDialog from "../../../components/DemographicDialog";
 import {
-  MoreOutlined as MoreIcon
+  MoreVert as MoreVertIcon
 } from "@material-ui/icons"
 import useStyles from "./styles";
 import TotalDialog from "../../../components/TotalsDialog";
@@ -108,13 +108,12 @@ function Metrics() {
         sortable: false,
         flex: 0.18,
         renderCell: () => (
-              <MoreIcon/>
+              <MoreVertIcon/>
         )
       }
     ];
   }, []);
 
-  //se que esta no es la mejor forma pero fue lo mas rapido que se me ocurrió
   ////TODO cambiar por alguna fora de parseo de date-fns
   const secondsToString = (seconds: number): string => {
     const second = Math.round(seconds % 0x3c).toString();
@@ -208,12 +207,16 @@ function Metrics() {
               />
             </Grid>
             <Grid item>
-              <Button
-                  variant={"outlined"}
-                  onClick={() => setIsOpenTotalDialog(true)}
-              >
-                Totales
-              </Button>
+              {
+                (dateRange[0] !== null && dateRange[1] !== null) ? (
+                    <Button
+                        variant={"outlined"}
+                        onClick={() => setIsOpenTotalDialog(true)}
+                    >
+                      Totales
+                    </Button>
+                ) : null
+              }
             </Grid>
           </Grid>
         </Box>
