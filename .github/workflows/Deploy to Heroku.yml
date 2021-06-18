@@ -35,4 +35,4 @@ jobs:
           useforce: true
           dynamicFiles: false
           env_file: ".env.local"
-          procfile: "web: npm run start"
+          procfile: "web: npm run start:heroku"

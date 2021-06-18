@@ -2,12 +2,12 @@ name: Deploy to Production
  
 on:
   push:
-    - 'master'
-    #tags:
+    tags:
+      - 'v*'
       
 env: 
-  REACT_APP_PLATFORM_URL:https://eventos.streamingcuba.com
-  REACT_APP_API_URL: http://apistreamingcuba.herokuapp.com
+  REACT_APP_PLATFORM_URL: https://eventos.streamingcuba.com
+  REACT_APP_API_URL: https://api.eventos.streamingcuba.com
 
 jobs:
   build:
@@ -30,12 +30,14 @@ jobs:
           echo "REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}" >> .env
         
       - name: Building 🛠
+        env: 
+          CI: false
         run: npm run build
 
       - name: Copying build assets
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: .build
+          local: build
           remote: /home/streaming/apps/admin-frontend/build
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
