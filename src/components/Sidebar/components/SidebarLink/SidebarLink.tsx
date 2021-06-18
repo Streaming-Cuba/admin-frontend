@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Inbox as InboxIcon } from "@material-ui/icons";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 
 import Dot from "../Dot";

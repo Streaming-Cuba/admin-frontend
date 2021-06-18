@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { withRouter, useHistory, Route, Redirect } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import clsx from "clsx";
 import { useTypedSelector } from "../../redux";
 import useStyles from "./styles";
-
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import { Paths } from "../../pages";
@@ -20,8 +19,10 @@ import Dashboard from "../../pages/dashboard";
 import { CircularProgress, Typography } from "@material-ui/core";
 import EventEdit from "../../pages/events/event-edit";
 import StatisticsVotes from "../../pages/statistics/votes";
+import StatisticsMetrics from "../../pages/statistics/metrics";
 import Account from "../../pages/account/account";
 import Settings from "../../pages/account/settings";
+import RedirectToDashboard from "../../pages/redirect";
 
 function Layout(props: LayoutProps) {
   const classes = useStyles();
@@ -37,13 +38,13 @@ function Layout(props: LayoutProps) {
     serverManager.refreshInstance();
     serverManager
       .getCurrentUserInfo()
-      .then((reponse) => {
-        dispatch(setAccount(reponse.data));
+      .then((response) => {
+        dispatch(setAccount(response.data));
       })
       .catch((error) => {
         if (error?.response?.status === 401) history.push(Paths.SignIn);
       });
-  }, []);
+  }, [dispatch, history, serverManager]);
 
   if (!isAuthenticated)
     return (
@@ -69,8 +70,10 @@ function Layout(props: LayoutProps) {
         <PrivateRoute component={Accounts} path={Paths.Accounts} exact/>
         <PrivateRoute component={Roles} path={Paths.Roles} exact/>
         <PrivateRoute component={StatisticsVotes} path={Paths.StatisticsVotes} exact/>
+        <PrivateRoute component={StatisticsMetrics} path={Paths.StatisticsMetrics} exact/>
         <PrivateRoute component={Account} path={Paths.Account} exact/>
         <PrivateRoute component={Settings} path={Paths.Settings} exact/>
+        <PrivateRoute component={RedirectToDashboard} path={Paths.Redirect} exact />
       </div>
     </div>
   );

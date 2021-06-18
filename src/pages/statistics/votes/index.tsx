@@ -1,11 +1,9 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { DataGrid, GridCellParams, GridColDef } from "@material-ui/data-grid";
+import React, {useMemo, useState, useEffect, useCallback} from "react";
+import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import {
-  Tooltip,
   IconButton,
   Box,
   Grid,
-  Select,
   MenuItem,
   TextField,
 } from "@material-ui/core";
@@ -13,15 +11,10 @@ import {
 import PageTitle from "../../../components/PageTitle";
 import {
   Refresh as RefreshIcon,
-  MoreVert as MoreVertIcon,
-  Edit as EditIcon,
-  OpenInNew as OpenInNewIcon,
-  Description as DescriptionIcon,
 } from "@material-ui/icons";
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
 import { useServerManager } from "../../../components/ServerManagerProvider";
-import Role from "../../../types/Role";
 import useStyles from "./styles";
 import Vote from "../../../types/Vote";
 import Event from "../../../types/Event";
@@ -39,7 +32,7 @@ function StatisticsVotes() {
   const [eventSelected, setEventSelected] = useState<string | null>(null);
   const [voteTypeSelected, setVoteTypeSelected] = useState<string | null>(null);
 
-  const loadVotes = () => {
+  const loadVotes = useCallback(() => {
     if (eventSelected && voteTypeSelected) {
       setLoading(true);
       serverManager
@@ -51,9 +44,9 @@ function StatisticsVotes() {
           setLoading(false);
         });
     }
-  };
+  }, [eventSelected, pageSize, serverManager, voteTypeSelected]);
 
-  const loadEvents = () => {
+  const loadEvents = useCallback(() => {
     setLoading(true);
     serverManager
       .loadEvents()
@@ -63,15 +56,15 @@ function StatisticsVotes() {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, [serverManager])
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [loadEvents]);
 
   useEffect(() => {
     loadVotes();
-  }, [eventSelected, voteTypeSelected, pageSize]);
+  }, [eventSelected, voteTypeSelected, pageSize, loadVotes]);
 
   const columns = useMemo<GridColDef[]>(() => {
     return [
@@ -99,7 +92,7 @@ function StatisticsVotes() {
       },
       
     ];
-  }, [votes]);
+  }, []);
 
   return (
     <div>
