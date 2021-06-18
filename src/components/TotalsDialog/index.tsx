@@ -100,7 +100,7 @@ export default function TotalDialog (props: TotalDialogProps): JSX.Element {
                                         <TableRow key={index}>
                                             <TableCell>{value}</TableCell>
                                             <TableCell>
-                                                {secondsToString(props.videosInfo.rankingByCountry[value])}
+                                                {secondsToString(props.videosInfo.rankingByCountry[value] * 60)}
                                             </TableCell>
                                         </TableRow>
                                     );
