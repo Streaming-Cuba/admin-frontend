@@ -1,6 +1,5 @@
 import React, {
   useEffect,
-  useMemo,
   useState,
   DragEvent,
   MouseEvent,
@@ -22,15 +21,12 @@ import {
 } from "@material-ui/core";
 import {
   Folder as FolderIcon,
-  Image as ImageIcon,
   ArrowBack as ArrowBackIcon,
 } from "@material-ui/icons";
-import { useTheme } from "@material-ui/styles";
 import PageTitle from "../../components/PageTitle";
 import useStyles from "./styles";
 import MediaItem from "../../types/MediaItem";
 import { useServerManager } from "../../components/ServerManagerProvider";
-import { useParams, useHistory } from "react-router";
 import { join } from "path";
 import { FolderPlus as AddFolderIcon } from "mdi-material-ui";
 import clsx from "clsx";
@@ -48,9 +44,9 @@ const initialState: initialContextMenuState = {
 
 export default function Media(props: any) {
   const classes = useStyles();
-  const theme = useTheme();
+  //const theme = useTheme();
   const serverManager = useServerManager();
-  const history = useHistory();
+  //const history = useHistory();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [path, setPath] = useState<string>("");
@@ -79,7 +75,7 @@ export default function Media(props: any) {
       .finally(() => {
         setLoading(false);
       });
-  }, [path]);
+  }, [path, serverManager]);
 
   const resolveAssetIcon = (item: MediaItem) => {
     return (

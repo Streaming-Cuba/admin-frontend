@@ -1,21 +1,17 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
   IconButton,
-  InputBase,
   Menu,
   MenuItem,
   Fab,
 } from "@material-ui/core";
 import {
   Menu as MenuIcon,
-  MailOutline as MailIcon,
-  NotificationsNone as NotificationsIcon,
   Person as AccountIcon,
-  Search as SearchIcon,
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
   Settings as SettingsIcon,
@@ -24,7 +20,7 @@ import clsx from "clsx";
 
 import useStyles from "./styles";
 
-import { Badge, Typography, Button } from "../Wrappers";
+import { Typography } from "../Wrappers";
 import Notification from "../Notification";
 import UserAvatar from "../UserAvatar";
 
@@ -47,12 +43,12 @@ function Header(props: any) {
   );
 
   const [mailMenu, setMailMenu] = useState<HTMLElement | null>(null);
-  const [isMailsUnread, setIsMailsUnread] = useState(true);
+ // const [isMailsUnread, setIsMailsUnread] = useState(true);
   const [notificationsMenu, setNotificationsMenu] =
     useState<HTMLElement | null>(null);
-  const [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
+ // const [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
   const [profileMenu, setProfileMenu] = useState<HTMLElement | null>(null);
-  const [isSearchOpen, setSearchOpen] = useState(false);
+ // const [isSearchOpen, setSearchOpen] = useState(false);
 
   const goToAccountPage = () => {
     setProfileMenu(null);

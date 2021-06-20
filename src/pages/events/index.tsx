@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {
   Box,
   IconButton,
@@ -10,11 +10,8 @@ import {
 import {
   DataGrid,
   GridColDef,
-  GridRowsProp,
-  GridValueGetterParams,
   GridCellParams,
 } from "@material-ui/data-grid";
-import { useTheme } from "@material-ui/styles";
 import {
   Refresh as RefreshIcon,
   MoreVert as MoreVertIcon,
@@ -23,7 +20,7 @@ import {
   Description as DescriptionIcon,
 } from "@material-ui/icons";
 import PageTitle from "../../components/PageTitle";
-import useStyles from "./styles";
+//import useStyles from "./styles";
 import { useServerManager } from "../../components/ServerManagerProvider";
 import Event from "../../types/Event";
 import * as PlatformUtils from "../../utils/PlatformUtils";
@@ -32,8 +29,8 @@ import GridLoadingOverlay from "../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../components/Grid/NoRowsOverlay";
 
 export default function Events() {
-  const classes = useStyles();
-  const theme = useTheme();
+  //const classes = useStyles();
+  //const theme = useTheme();
   const serverManager = useServerManager();
   const history = useHistory();
 
@@ -45,7 +42,7 @@ export default function Events() {
     useState<HTMLElement | null>(null);
   const [selectedRow, setSelectedRow] = useState<Event | null>(null);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     setLoading(true);
     serverManager
       .loadEvents(currentPage, pageSize)
@@ -55,11 +52,11 @@ export default function Events() {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, [currentPage, pageSize, serverManager]);
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [refresh]);
 
   const handleMoreActionsClick = (
     event: React.MouseEvent<HTMLElement>,
