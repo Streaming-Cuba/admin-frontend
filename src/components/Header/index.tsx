@@ -250,17 +250,17 @@ function Header(props: any) {
             <AccountIcon className={classes.profileMenuIcon} /> Cuenta de
             usuario
           </MenuItem>
-          <MenuItem
+          {/* <MenuItem
             onClick={goToSettingsPage}
             className={clsx(classes.profileMenuItem, classes.headerMenuItem)}
           >
             <SettingsIcon className={classes.profileMenuIcon} /> Configuración
-          </MenuItem>
+          </MenuItem> */}
           <div className={classes.profileMenuUser}>
             <Typography
               className={classes.profileMenuLink}
               color="primary"
-              onClick={() => dispatch(signOut())}
+              onClick={() =>  dispatch(signOut())}
             >
               Salir
             </Typography>

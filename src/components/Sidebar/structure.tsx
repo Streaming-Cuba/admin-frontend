@@ -69,13 +69,6 @@ const structure = [
     target: "_blank",
     icon: <OpenInNewIcon />,
   },
-  {
-    id: 7,
-    label: "Televoting",
-    link: "https://televoting.streamingcuba.com",
-    target: "_blank",
-    icon: <OpenInNewIcon />,
-  },
   // {
   //   id: 8,
   //   label: "Support",

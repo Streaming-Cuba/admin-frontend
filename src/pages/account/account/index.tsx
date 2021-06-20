@@ -33,6 +33,7 @@ export default function Account() {
               label="Nombre"
               variant="outlined"
               fullWidth
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={5}>
@@ -41,12 +42,22 @@ export default function Account() {
               label="Apellidos"
               variant="outlined"
               fullWidth
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={5}>
             <TextField
               value={account?.email}
               label="Correo electrónico"
+              variant="outlined"
+              fullWidth
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <TextField
+              value={account?.createdAt}
+              label="Fecha de creación"
               variant="outlined"
               fullWidth
               disabled
