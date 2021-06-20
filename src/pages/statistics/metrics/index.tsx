@@ -5,7 +5,7 @@ import {DataGrid, GridColDef} from "@material-ui/data-grid";
 import PageTitle from "../../../components/PageTitle";
 import {
   Box, Button,
-  Grid,
+  Grid, IconButton,
   TextField,
 } from "@material-ui/core";
 import {
@@ -20,16 +20,21 @@ import VideosInfo from "../../../types/VideosInfo";
 import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 import DemographicDialog from "../../../components/DemographicDialog";
 import {
-  MoreVert as MoreVertIcon
+  MoreVert as MoreVertIcon,
+  Refresh as RefreshIcon,
+  Assignment as AssignmentIcon
 } from "@material-ui/icons"
 import useStyles from "./styles";
 import TotalDialog from "../../../components/TotalsDialog";
 import ParseDemographic from "../../../types/ParseDemographic";
+import {useDispatch} from "react-redux";
+import {setVideoReports} from "../../../redux/reducers/metrics";
 
 function Metrics() {
   const serverManager = useServerManager();
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles()
+  const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -208,15 +213,23 @@ function Metrics() {
             </Grid>
             <Grid item>
               {
-                (dateRange[0] !== null && dateRange[1] !== null) ? (
-                    <Button
-                        variant={"outlined"}
-                        onClick={() => setIsOpenTotalDialog(true)}
-                    >
-                      Totales
-                    </Button>
+                (videosInfo.videos_count > 0) ? (
+                    <>
+                      <IconButton onClick={() => dispatch(setVideoReports([]))}>
+                        <AssignmentIcon/>
+                      </IconButton>
+                      <Button
+                          variant={"outlined"}
+                          onClick={() => setIsOpenTotalDialog(true)}
+                      >
+                        Totales
+                      </Button>
+                    </>
                 ) : null
               }
+              <IconButton onClick={loadInfo}>
+                <RefreshIcon/>
+              </IconButton>
             </Grid>
           </Grid>
         </Box>
@@ -237,6 +250,7 @@ function Metrics() {
             loading={isLoading}
             autoHeight
             disableSelectionOnClick
+            checkboxSelection
             onCellClick={((param) => {
               if(param.field === "more"){
                 setDemographicData({
