@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import bg1 from '../../assets/images/bg1.jpg'
+import bg1 from '../../assets/images/bg1.webp'
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
