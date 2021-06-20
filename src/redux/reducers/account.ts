@@ -80,6 +80,7 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     signOut: (state) => {
+      CookieManager.clearAll();
       state.isAuthenticated = false;
       state.token = null;
       state.account = null;      

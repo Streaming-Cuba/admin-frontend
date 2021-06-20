@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-
+import bg1 from '../../assets/images/bg1.jpg'
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -7,7 +7,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     maxHeight: "100vh",
     height: "100vh",
-    background: `linear-gradient(150deg, ${theme.palette.primary.dark} 40%, ${theme.palette.primary.main} 95%)`,
+    backgroundImage: `url(${bg1})`,
+    backgroundSize: 'cover',
   },
   card: {
     display: "flex",

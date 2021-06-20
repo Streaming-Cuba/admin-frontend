@@ -14,4 +14,9 @@ export default makeStyles((theme) => ({
     width: theme.spacing(14),
     height: theme.spacing(14),
   },
+  xl: {
+    width: theme.spacing(17),
+    height: theme.spacing(17),
+    fontSize: "3rem"
+  },
 }));

@@ -18,6 +18,10 @@ class CookieManager {
   getToken(): string {
     return this.cookies.get(TOKEN_COOKIE_NAME);
   }
+
+  clearAll() {
+    this.cookies.remove(TOKEN_COOKIE_NAME);
+  }
 }
 
 export default new CookieManager();

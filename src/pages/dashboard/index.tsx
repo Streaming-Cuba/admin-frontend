@@ -3,6 +3,7 @@ import { Button } from "@material-ui/core";
 import { useTheme } from "@material-ui/styles";
 import PageTitle from "../../components/PageTitle";
 import useStyles from "./styles";
+import WorkingMessage from "../../components/WorkingMessage";
 
 export default function Dashboard(props: any) {
   const classes = useStyles();
@@ -10,11 +11,9 @@ export default function Dashboard(props: any) {
 
   return (
     <>
-      <PageTitle title="Dashboard">
-        <Button variant="contained" size="medium" color="secondary">
-          Latest Reports
-        </Button>
-      </PageTitle>
+      <PageTitle title="Dashboard"/>
+
+      <WorkingMessage/>
     </>
   );
 }
