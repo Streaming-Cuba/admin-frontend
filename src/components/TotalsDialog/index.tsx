@@ -53,90 +53,90 @@ export default function TotalDialog (props: TotalDialogProps): JSX.Element {
                     Totales
                 </DialogTitle>
                 <Grid container aria-orientation={"horizontal"} style={{ padding: 5 }}>
-                <Grid item xs={4} md={4} style={{ padding: 5 }}>
-                    <TableContainer>
-                        <Table title={"Totales"}>
+                    <Grid item xs={4} md={4} style={{ padding: 5 }}>
+                        <TableContainer>
+                            <Table title={"Totales"}>
+                                <TableHead>
+                                    <Typography>Totales</Typography>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>Total de Videos</TableCell>
+                                        <TableCell>{props.videosInfo.videos_count}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Alcance Total:</TableCell>
+                                        <TableCell>{props.videosInfo.total_reach}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Total de Vistas:</TableCell>
+                                        <TableCell>{props.videosInfo.total_views}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Total de Paises:</TableCell>
+                                        <TableCell>{props.videosInfo.total_countries}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Total de Regiones:</TableCell>
+                                        <TableCell>{props.videosInfo.total_regions}</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
+                    <Grid item xs={4} md={4} style={{ padding: 5 }}>
+                        <Table>
                             <TableHead>
-                                <Typography>Totales</Typography>
+                                <Typography>5 Paises con mas tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell>Total de Videos</TableCell>
-                                    <TableCell>{props.videosInfo.videos_count}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Alcance Total:</TableCell>
-                                    <TableCell>{props.videosInfo.total_reach}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Total de Vistas:</TableCell>
-                                    <TableCell>{props.videosInfo.total_views}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Total de Paises:</TableCell>
-                                    <TableCell>{props.videosInfo.total_countries}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Total de Regiones:</TableCell>
-                                    <TableCell>{props.videosInfo.total_regions}</TableCell>
-                                </TableRow>
+                                {Object.keys(props.videosInfo.rankingByCountry)
+                                    .sort((a, b) => (
+                                        props.videosInfo.rankingByCountry[b] - props.videosInfo.rankingByCountry[a]
+                                    ))
+                                    .splice(0, 5)
+                                    .map((value, index) => {
+                                        return (
+                                            <TableRow key={index}>
+                                                <TableCell>{value}</TableCell>
+                                                <TableCell>
+                                                    {secondsToString(props.videosInfo.rankingByCountry[value] * 60)}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
                             </TableBody>
                         </Table>
-                    </TableContainer>
+                    </Grid>
+                    <Grid item xs={4} md={4} style={{ padding: 5 }}>
+                        <Table>
+                            <TableHead>
+                                <Typography>5 Regiones con mas tiempo de reproducción</Typography>
+                            </TableHead>
+                            <TableBody>
+                                {Object.keys(props.videosInfo.rankingByRegion)
+                                    .sort((a, b) => (
+                                        props.videosInfo.rankingByRegion[b] - props.videosInfo.rankingByRegion[a]
+                                    ))
+                                    .splice(0, 5)
+                                    .map((value, index) => {
+                                        return (
+                                            <TableRow key={index}>
+                                                <TableCell>{value}</TableCell>
+                                                <TableCell>{secondsToString(props.videosInfo.rankingByRegion[value]/1000)}</TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                        </Table>
+                    </Grid>
                 </Grid>
-                <Grid item xs={4} md={4} style={{ padding: 5 }}>
-                    <Table>
-                        <TableHead>
-                            <Typography>5 Paises con mas tiempo de reproducción</Typography>
-                        </TableHead>
-                        <TableBody>
-                            {Object.keys(props.videosInfo.rankingByCountry)
-                                .sort((a, b) => (
-                                    props.videosInfo.rankingByCountry[b] - props.videosInfo.rankingByCountry[a]
-                                ))
-                                .splice(0, 5)
-                                .map((value, index) => {
-                                    return (
-                                        <TableRow key={index}>
-                                            <TableCell>{value}</TableCell>
-                                            <TableCell>
-                                                {secondsToString(props.videosInfo.rankingByCountry[value] * 60)}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </Grid>
-                <Grid item xs={4} md={4} style={{ padding: 5 }}>
-                    <Table>
-                        <TableHead>
-                            <Typography>5 Regiones con mas tiempo de reproducción</Typography>
-                        </TableHead>
-                        <TableBody>
-                            {Object.keys(props.videosInfo.rankingByRegion)
-                                .sort((a, b) => (
-                                    props.videosInfo.rankingByRegion[b] - props.videosInfo.rankingByRegion[a]
-                                ))
-                                .splice(0, 5)
-                                .map((value, index) => {
-                                    return (
-                                        <TableRow key={index}>
-                                            <TableCell>{value}</TableCell>
-                                            <TableCell>{secondsToString(props.videosInfo.rankingByRegion[value]/1000)}</TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </Grid>
-            </Grid>
-        </DialogContent>
-    <DialogActions>
-        <Button onClick={() => props.onClose()} color="primary">
-            Cerrar
-        </Button>
-    </DialogActions>
-</Dialog>
-)
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => props.onClose()} color="primary">
+                    Cerrar
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
 }

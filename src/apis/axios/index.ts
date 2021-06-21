@@ -115,6 +115,28 @@ class ServerManager {
     let  url = `/api/v1/facebook/videos-info?since=${since}&until=${until}`;
     return this.apiAxios.get<VideosInfo>(url)
   }
+
+  loadAccount() {
+    let url = "/api/v1/account?email=admin%40streamingcuba.com"
+    return this.apiAxios.get(url)
+  }
+
+  createAccount(data: {
+    email: string,
+    password: string,
+    name: string,
+    lastName: string,
+    rolId: number
+  }){
+    let url = "/api/v1/account"
+    return this.apiAxios.post(url, {
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      lastName: data.lastName,
+      rolesId: [data.rolId]
+    })
+  }
 }
 
 export default ServerManager;
