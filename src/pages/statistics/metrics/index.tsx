@@ -28,13 +28,16 @@ import useStyles from "./styles";
 import TotalDialog from "../../../components/TotalsDialog";
 import ParseDemographic from "../../../types/ParseDemographic";
 import {useDispatch} from "react-redux";
-import {setVideoReports} from "../../../redux/reducers/metrics";
+import {setVideoReports,removeVideoReports} from "../../../redux/reducers/metrics";
+import {useHistory} from "react-router";
+import {Paths} from "../../"
 
 function Metrics() {
   const serverManager = useServerManager();
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles()
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -215,7 +218,7 @@ function Metrics() {
               {
                 (videosInfo.videos_count > 0) ? (
                     <>
-                      <IconButton onClick={() => dispatch(setVideoReports([]))}>
+                      <IconButton onClick={() => history.push(Paths.MetricsReport) }>
                         <AssignmentIcon/>
                       </IconButton>
                       <Button
@@ -251,6 +254,12 @@ function Metrics() {
             autoHeight
             disableSelectionOnClick
             checkboxSelection
+            onRowSelected={ (param) => {
+              if (param.isSelected)
+                dispatch(setVideoReports(param.data))
+              else
+                dispatch(removeVideoReports(param.data))
+            }}
             onCellClick={((param) => {
               if(param.field === "more"){
                 setDemographicData({
