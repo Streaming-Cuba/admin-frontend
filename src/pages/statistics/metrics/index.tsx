@@ -31,6 +31,7 @@ import {useDispatch} from "react-redux";
 import {setVideoReports,removeVideoReports} from "../../../redux/reducers/metrics";
 import {useHistory} from "react-router";
 import {Paths} from "../../"
+import {useTypedSelector} from "../../../redux";
 
 function Metrics() {
   const serverManager = useServerManager();
@@ -38,6 +39,7 @@ function Metrics() {
   const classes = useStyles()
   const dispatch = useDispatch();
   const history = useHistory();
+  const videosToReport = useTypedSelector(state => state.metrics.videos.length)
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -122,7 +124,6 @@ function Metrics() {
     ];
   }, []);
 
-  ////TODO cambiar por alguna fora de parseo de date-fns
   const secondsToString = (seconds: number): string => {
     const second = Math.round(seconds % 0x3c).toString();
     const hour = Math.floor(seconds / 0xe10).toString();
@@ -216,11 +217,15 @@ function Metrics() {
             </Grid>
             <Grid item>
               {
-                (videosInfo.videos_count > 0) ? (
+                (videosInfo.videos_count > 0) && (
                     <>
-                      <IconButton onClick={() => history.push(Paths.MetricsReport) }>
-                        <AssignmentIcon/>
-                      </IconButton>
+                      {
+                        videosToReport > 0 && (
+                            <IconButton onClick={() => history.push(Paths.MetricsReport) }>
+                              <AssignmentIcon/>
+                            </IconButton>
+                        )
+                      }
                       <Button
                           variant={"outlined"}
                           onClick={() => setIsOpenTotalDialog(true)}
@@ -228,7 +233,7 @@ function Metrics() {
                         Totales
                       </Button>
                     </>
-                ) : null
+                )
               }
               <IconButton onClick={loadInfo}>
                 <RefreshIcon/>
