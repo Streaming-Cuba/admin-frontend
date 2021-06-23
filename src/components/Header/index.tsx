@@ -24,7 +24,7 @@ import { Typography } from "../Wrappers";
 import Notification from "../Notification";
 import UserAvatar from "../UserAvatar";
 
-import { useTypedSelector } from "../../redux";
+import { useAppSelector } from "../../redux";
 import { toggleSidebar } from "../../redux/reducers/layout";
 import { signOut } from "../../redux/reducers/account";
 
@@ -35,10 +35,10 @@ function Header(props: any) {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const account = useTypedSelector((state) => state.account.account);
-  const layoutState = useTypedSelector((state) => state.layout);
-  const messages = useTypedSelector((state) => state.account.messages);
-  const notifications = useTypedSelector(
+  const account = useAppSelector((state) => state.account.account);
+  const layoutState = useAppSelector((state) => state.layout);
+  const messages = useAppSelector((state) => state.account.messages);
+  const notifications = useAppSelector(
     (state) => state.account.notifications
   );
 

@@ -14,7 +14,7 @@ import clsx from "clsx";
 
 import Dot from "../Dot";
 import useStyles from "./styles";
-import { useTypedSelector } from "../../../../redux";
+import { useAppSelector } from "../../../../redux";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../../../redux/reducers/layout";
 
@@ -41,7 +41,7 @@ export default function SidebarLink(props: SidebarLinkProps) {
   const location = history.location;
   const dispatch = useDispatch();
 
-  const isSidebarOpened = useTypedSelector(
+  const isSidebarOpened = useAppSelector(
     (state) => state.layout.isSidebarOpen
   );
 
