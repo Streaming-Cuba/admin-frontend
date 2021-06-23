@@ -23,6 +23,7 @@ import StatisticsMetrics from "../../pages/statistics/metrics";
 import Account from "../../pages/account/account";
 import Settings from "../../pages/account/settings";
 import RedirectToDashboard from "../../pages/redirect";
+import ResetPassword from "../../pages/reset-password";
 
 function Layout(props: LayoutProps) {
   const classes = useStyles();

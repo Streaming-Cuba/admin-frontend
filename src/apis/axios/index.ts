@@ -117,7 +117,7 @@ class ServerManager {
   }
 
   loadAccount() {
-    let url = "/api/v1/account?email=admin%40streamingcuba.com"
+    let url = "/api/v1/account?email=admin@streamingcuba.com"
     return this.apiAxios.get(url)
   }
 

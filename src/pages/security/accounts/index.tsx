@@ -3,7 +3,7 @@ import PageTitle from "../../../components/PageTitle";
 import {useEffect, useMemo, useState} from "react";
 import AddAccountDialog from "../../../components/AddAccountDIalog";
 import {Avatar, IconButton} from "@material-ui/core";
-import {MoreVert as MoreVertIcon, PersonAdd as PersonAddIcon} from "@material-ui/icons"
+import {PersonAdd as PersonAddIcon} from "@material-ui/icons"
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
 import {DataGrid, GridColDef} from "@material-ui/data-grid";
@@ -28,21 +28,21 @@ function Accounts() {
                 headerName: "Nombre",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.8,
+                flex: 0.6,
             },
             {
                 field: "lastName",
                 headerName: "Apellido",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.8,
+                flex: 0.6,
             },
             {
                 field: "email",
                 headerName: "Email",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.3,
+                flex: 0.5,
             },
             {
                 field: "rol",
@@ -63,7 +63,7 @@ function Accounts() {
                 headerName: "Avatar",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.18,
+                flex: 0.3,
                 renderCell: () => <Avatar/>
             }
         ];
@@ -73,6 +73,7 @@ function Accounts() {
         serverManager
             .loadAccount()
             .then( r => console.log(r))
+            .catch( err => console.log(err))
     })
 
     return (

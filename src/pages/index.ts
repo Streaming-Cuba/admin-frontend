@@ -13,5 +13,6 @@ export const Paths = {
   SignIn: "/sign-in",
   Account: "/account",
   Settings: "/account/settings",
-  Redirect: "/"
+  Redirect: "/",
+  ResetPassword: "/reset-password"
 };
