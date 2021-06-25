@@ -100,7 +100,6 @@ function FacebookMetricsReport(): JSX.Element {
               date: "",
           }})
 
-      console.log(total)
       setTotals(total)
 
       return () => {
@@ -112,8 +111,8 @@ function FacebookMetricsReport(): JSX.Element {
         return (
             <>
                 <PageTitle title={"Estadíticas de Videos Seleccionados"}/>
-                <Grid container aria-orientation={"horizontal"} style={{ padding: 5 }}>
-                    <Grid item xs={4} md={6} style={{ padding: 5 }}>
+                <Grid container aria-orientation={"horizontal"} style={{ paddingLeft: "10%", paddingRight: "20%" }}>
+                    <Grid item xs={4} md={6} style={{ padding: 15 }}>
                         <TableContainer>
                             <Table title={"Totales"}>
                                 <TableHead>
@@ -136,7 +135,7 @@ function FacebookMetricsReport(): JSX.Element {
                             </Table>
                         </TableContainer>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item md={6} style={{ padding: 15}}>
                         <Table>
                             <TableHead>
                                 <TableRow>
@@ -230,7 +229,7 @@ function FacebookMetricsReport(): JSX.Element {
                             </TableBody>
                         </Table>
                     </Grid>
-                    <Grid item xs={4} md={4} style={{ padding: 5 }}>
+                    <Grid item xs={4} md={6} style={{ padding: 15 }}>
                         <Table>
                             <TableHead>
                                 <Typography>5 Paises con mas tiempo de reproducción</Typography>
@@ -254,7 +253,7 @@ function FacebookMetricsReport(): JSX.Element {
                             </TableBody>
                         </Table>
                     </Grid>
-                    <Grid item xs={4} md={4} style={{ padding: 5 }}>
+                    <Grid item xs={4} md={6} style={{ padding: 15 }}>
                         <Table>
                             <TableHead>
                                 <Typography>5 Regiones con mas tiempo de reproducción</Typography>
