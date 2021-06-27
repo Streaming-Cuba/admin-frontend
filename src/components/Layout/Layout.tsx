@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { withRouter, useHistory } from "react-router-dom";
 import clsx from "clsx";
-import { useTypedSelector } from "../../redux";
+import { useAppSelector } from "../../redux";
 import useStyles from "./styles";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
@@ -23,6 +23,7 @@ import StatisticsMetrics from "../../pages/statistics/metrics";
 import Account from "../../pages/account/account";
 import Settings from "../../pages/account/settings";
 import RedirectToDashboard from "../../pages/redirect";
+import FacebookMetricsReport from "../../pages/reports/facebook-metrics"
 
 function Layout(props: LayoutProps) {
   const classes = useStyles();
@@ -30,7 +31,7 @@ function Layout(props: LayoutProps) {
   const history = useHistory();
   const serverManager = useServerManager();
 
-  const isAuthenticated = useTypedSelector(
+  const isAuthenticated = useAppSelector(
     (state) => state.account.isAuthenticated
   );
 
@@ -74,6 +75,7 @@ function Layout(props: LayoutProps) {
         <PrivateRoute component={Account} path={Paths.Account} exact/>
         <PrivateRoute component={Settings} path={Paths.Settings} exact/>
         <PrivateRoute component={RedirectToDashboard} path={Paths.Redirect} exact />
+        <PrivateRoute component={FacebookMetricsReport} path={Paths.MetricsReport} exact />
       </div>
     </div>
   );

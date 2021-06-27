@@ -3,14 +3,14 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import { useTheme } from "@material-ui/styles";
 import useStyles from "./styles";
 import PageTitle from "../../../components/PageTitle";
-import { useTypedSelector } from "../../../redux";
+import { useAppSelector } from "../../../redux";
 import UserAvatar from "../../../components/UserAvatar";
 
 export default function Account() {
   const classes = useStyles();
   const theme = useTheme();
 
-  const account = useTypedSelector((state) => state.account.account);
+  const account = useAppSelector((state) => state.account.account);
 
   return (
     <>
