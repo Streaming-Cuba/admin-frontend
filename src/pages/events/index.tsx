@@ -18,6 +18,7 @@ import {
   Edit as EditIcon,
   OpenInNew as OpenInNewIcon,
   Description as DescriptionIcon,
+  PostAdd as PostAddIcon
 } from "@material-ui/icons";
 import PageTitle from "../../components/PageTitle";
 //import useStyles from "./styles";
@@ -27,6 +28,7 @@ import * as PlatformUtils from "../../utils/PlatformUtils";
 import { useHistory } from "react-router-dom";
 import GridLoadingOverlay from "../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../components/Grid/NoRowsOverlay";
+import {Paths} from "../index";
 
 export default function Events() {
   //const classes = useStyles();
@@ -113,9 +115,16 @@ export default function Events() {
     }
   };
 
+  const createEvent = () => {
+    history.push(Paths.CreateEvent)
+  }
+
   return (
     <>
       <PageTitle title="Eventos">
+        <IconButton onClick={createEvent}>
+          <PostAddIcon/>
+        </IconButton>
         <IconButton onClick={refresh}>
           <RefreshIcon />
         </IconButton>
