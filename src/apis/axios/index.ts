@@ -123,7 +123,6 @@ class ServerManager {
 
   createAccount(data: {
     email: string,
-    password: string,
     name: string,
     lastName: string,
     rolId: number
@@ -131,7 +130,6 @@ class ServerManager {
     let url = "/api/v1/account"
     return this.apiAxios.post(url, {
       email: data.email,
-      password: data.password,
       name: data.name,
       lastName: data.lastName,
       rolesId: [data.rolId]
