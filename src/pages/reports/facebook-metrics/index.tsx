@@ -109,7 +109,7 @@ function FacebookMetricsReport(): JSX.Element {
             setTotals(total)
 
         } else
-            history.push(Paths.StatisticsMetrics)
+            history.goBack()
         return () => {
             dispatch(clearVideos())
         }
