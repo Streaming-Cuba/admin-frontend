@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -85,7 +85,13 @@ function Header(props: any) {
             />
           )}
         </IconButton>
-        <Typography variant="h6" weight="medium" className={classes.logotype}>
+        <Typography
+            variant="h6"
+            weight="medium"
+            className={classes.logotype}
+            component={Link}
+            to={"/dashboard"}
+        >
           StreamingCuba
         </Typography>
         <div className={classes.grow} />

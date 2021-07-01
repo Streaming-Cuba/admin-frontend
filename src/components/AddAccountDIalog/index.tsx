@@ -18,7 +18,6 @@ interface AddAccountDialogProps {
 
 interface FormData {
     email: string,
-    password: string,
     name: string,
     lastName: string,
     rolId: number
@@ -33,7 +32,6 @@ export default function AddAccountDialog({isOpen, onClose}: AddAccountDialogProp
         email:'',
         lastName:'',
         name:'',
-        password:'',
         rolId: 3
     })
     const [loading, setLoading] = useState<boolean>(false)
@@ -63,9 +61,9 @@ export default function AddAccountDialog({isOpen, onClose}: AddAccountDialogProp
                 email:'',
                 lastName:'',
                 name:'',
-                password:'',
                 rolId: 3
             })
+            setError(false)
         }
     }, [])
 
@@ -75,6 +73,7 @@ export default function AddAccountDialog({isOpen, onClose}: AddAccountDialogProp
             onClose={onClose}
             open={isOpen}
             fullWidth
+            keepMounted={false}
         >
             <DialogTitle>
                 Añadir Cuenta
@@ -103,14 +102,6 @@ export default function AddAccountDialog({isOpen, onClose}: AddAccountDialogProp
                     onChange={handleChangeText("email")}
                 />
                 <TextField
-                    fullWidth
-                    variant={"outlined"}
-                    label={"Contraseña"}
-                    type={"password"}
-                    className={classes.inputArea}
-                    onChange={handleChangeText("password")}
-                />
-                <TextField
                     select
                     label="Rol"
                     onChange={handleChangeText("rolId")}
@@ -136,7 +127,7 @@ export default function AddAccountDialog({isOpen, onClose}: AddAccountDialogProp
             <DialogContent>
                 {
                     error && (
-                        <Typography color={"error"}>
+                        <Typography color={"error"} align={"center"}>
                             Un error inesperado ha ocurrido
                         </Typography>
                     )

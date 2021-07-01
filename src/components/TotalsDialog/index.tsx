@@ -90,9 +90,9 @@ export default function TotalDialog (props: TotalDialogProps): JSX.Element {
                                 <Typography>5 Paises con mas tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
-                                {Object.keys(props.videosInfo.rankingByCountry)
+                                {Object.keys(props.videosInfo.ranking_by_country)
                                     .sort((a, b) => (
-                                        props.videosInfo.rankingByCountry[b] - props.videosInfo.rankingByCountry[a]
+                                        props.videosInfo.ranking_by_country[b] - props.videosInfo.ranking_by_country[a]
                                     ))
                                     .splice(0, 5)
                                     .map((value, index) => {
@@ -100,7 +100,7 @@ export default function TotalDialog (props: TotalDialogProps): JSX.Element {
                                             <TableRow key={index}>
                                                 <TableCell>{value}</TableCell>
                                                 <TableCell>
-                                                    {secondsToString(props.videosInfo.rankingByCountry[value] * 60)}
+                                                    {secondsToString(props.videosInfo.ranking_by_country[value] * 60)}
                                                 </TableCell>
                                             </TableRow>
                                         );
@@ -114,16 +114,16 @@ export default function TotalDialog (props: TotalDialogProps): JSX.Element {
                                 <Typography>5 Regiones con mas tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
-                                {Object.keys(props.videosInfo.rankingByRegion)
+                                {Object.keys(props.videosInfo.ranking_by_region)
                                     .sort((a, b) => (
-                                        props.videosInfo.rankingByRegion[b] - props.videosInfo.rankingByRegion[a]
+                                        props.videosInfo.ranking_by_region[b] - props.videosInfo.ranking_by_region[a]
                                     ))
                                     .splice(0, 5)
                                     .map((value, index) => {
                                         return (
                                             <TableRow key={index}>
                                                 <TableCell>{value}</TableCell>
-                                                <TableCell>{secondsToString(props.videosInfo.rankingByRegion[value]/1000)}</TableCell>
+                                                <TableCell>{secondsToString(props.videosInfo.ranking_by_region[value]/1000)}</TableCell>
                                             </TableRow>
                                         );
                                     })}
