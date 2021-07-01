@@ -42,8 +42,8 @@ function Metrics() {
     total_countries: 0,
     total_regions: 0,
     videos: [],
-    rankingByRegion: {},
-    rankingByCountry: {},
+    ranking_by_region: {},
+    ranking_by_country: {},
   });
   const [isOpenDemographicDialog, setIsOpenDemographicDialog] = useState<boolean>(false)
   const [demographicData, setDemographicData] = useState<ParseDemographic>({
@@ -169,8 +169,8 @@ function Metrics() {
             total_countries: 0,
             total_regions: 0,
             videos: [],
-            rankingByRegion: {},
-            rankingByCountry: {},
+            ranking_by_region: {},
+            ranking_by_country: {},
           });
         })
         .finally(() => setLoading(false));

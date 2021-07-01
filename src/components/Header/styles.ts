@@ -12,6 +12,7 @@ export default makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       display: "none",
     },
+    textDecoration: "none"
   },
   appBar: {
     width: "100vw",
