@@ -12,7 +12,7 @@ type Video = {
     more?: string,
     demographic: Demographic,
     parsedDemographic?: ParsedDemographic,
-    rankingByRegion: {[key: string]: number},
-    rankingByCountry: {[key: string]: number}
+    ranking_by_region: {[key: string]: number},
+    ranking_by_country: {[key: string]: number}
 }
 export default Video
