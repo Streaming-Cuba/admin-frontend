@@ -3,9 +3,11 @@ type Account = {
   lastName: string;
   email: string;
   avatarPath: string;
-  rolesId: [0];
+  rolesId: [];
   createdAt: Date;
   modifiedAt: Date;
+  id?: number;
+  date?:string
 };
 
 export default Account;

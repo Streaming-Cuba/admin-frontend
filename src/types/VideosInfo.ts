@@ -7,8 +7,8 @@ type VideosInfo = {
     total_countries: number,
     total_regions: number,
     videos: Video[],
-    rankingByRegion: {[key: string]: number},
-    rankingByCountry: {[key: string]: number}
+    ranking_by_region: {[key: string]: number},
+    ranking_by_country: {[key: string]: number}
 }
 
 export default VideosInfo

@@ -10,9 +10,6 @@ import {
     TableRow,
     Typography
 } from "@material-ui/core";
-import {
-
-} from "@material-ui/icons"
 import { useDispatch } from "react-redux";
 import { clearVideos } from "../../../redux/reducers/metrics";
 import PageTitle from "../../../components/PageTitle";
@@ -49,8 +46,8 @@ function FacebookMetricsReport(): JSX.Element {
             "M.55-64": 0,
             "M.65+": 0,
         },
-        rankingByCountry: {},
-        rankingByRegion: {},
+        ranking_by_country: {},
+        ranking_by_region: {},
     })
 
     const secondsToString = (seconds: number): string => {
@@ -69,16 +66,16 @@ function FacebookMetricsReport(): JSX.Element {
 
                 const newCountries:{[key: string]: number} = {}
                 Object
-                    .keys(previousValue.rankingByCountry)
+                    .keys(previousValue.ranking_by_country)
                     .forEach(
-                        value => newCountries[value] = previousValue.rankingByCountry[value] + currentValue.rankingByCountry[value]
+                        value => newCountries[value] = previousValue.ranking_by_country[value] + currentValue.ranking_by_country[value]
                     )
 
                 const newRegion:{[key: string]: number} = {}
                 Object
-                    .keys(previousValue.rankingByRegion)
+                    .keys(previousValue.ranking_by_region)
                     .forEach(
-                        value => newRegion[value] = previousValue.rankingByRegion[value] + currentValue.rankingByRegion[value]
+                        value => newRegion[value] = previousValue.ranking_by_region[value] + currentValue.ranking_by_region[value]
                     )
 
                 return {
@@ -101,8 +98,8 @@ function FacebookMetricsReport(): JSX.Element {
                         "M.55-64": previousValue.demographic["M.55-64"] + currentValue.demographic["M.55-64"],
                         "M.65+": previousValue.demographic["M.65+"] + currentValue.demographic["M.65+"],
                     },
-                    rankingByCountry: newCountries,
-                    rankingByRegion: newRegion,
+                    ranking_by_country: newCountries,
+                    ranking_by_region: newRegion,
                     date: "",
                 }})
 
@@ -242,9 +239,9 @@ function FacebookMetricsReport(): JSX.Element {
                                 <Typography>5 Paises con mas tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
-                                {Object.keys(totals.rankingByCountry)
+                                {Object.keys(totals.ranking_by_country)
                                     .sort((a, b) => (
-                                        totals.rankingByCountry[b] - totals.rankingByCountry[a]
+                                        totals.ranking_by_country[b] - totals.ranking_by_country[a]
                                     ))
                                     .splice(0, 5)
                                     .map((value, index) => {
@@ -252,7 +249,7 @@ function FacebookMetricsReport(): JSX.Element {
                                             <TableRow key={index}>
                                                 <TableCell>{value}</TableCell>
                                                 <TableCell>
-                                                    {secondsToString(totals.rankingByCountry[value] * 60)}
+                                                    {secondsToString(totals.ranking_by_country[value] * 60)}
                                                 </TableCell>
                                             </TableRow>
                                         );
@@ -266,16 +263,16 @@ function FacebookMetricsReport(): JSX.Element {
                                 <Typography>5 Regiones con mas tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
-                                {Object.keys(totals.rankingByRegion)
+                                {Object.keys(totals.ranking_by_region)
                                     .sort((a, b) => (
-                                        totals.rankingByRegion[b] - totals.rankingByRegion[a]
+                                        totals.ranking_by_region[b] - totals.ranking_by_region[a]
                                     ))
                                     .splice(0, 5)
                                     .map((value, index) => {
                                         return (
                                             <TableRow key={index}>
                                                 <TableCell>{value}</TableCell>
-                                                <TableCell>{secondsToString(totals.rankingByRegion[value]/1000)}</TableCell>
+                                                <TableCell>{secondsToString(totals.ranking_by_region[value]/1000)}</TableCell>
                                             </TableRow>
                                         );
                                     })}
