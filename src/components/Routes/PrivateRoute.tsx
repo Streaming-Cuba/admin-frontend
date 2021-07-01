@@ -1,12 +1,12 @@
 import {Redirect, Route, RouteComponentProps} from "react-router";
 import React from "react";
-import {useTypedSelector} from "../../redux";
+import {useAppSelector} from "../../redux";
 
 function PrivateRoute(props: PrivateRouteProps) {
 
   const {component, ...rest} = props;
 
-  const isAuthenticated = useTypedSelector(state => state.account.token);
+  const isAuthenticated = useAppSelector(state => state.account.token);
 
   return (
     <Route
