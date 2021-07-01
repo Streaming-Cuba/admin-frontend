@@ -13,7 +13,6 @@ import esLocale from "date-fns/locale/es";
 
 import { SignIn, Paths } from "./pages";
 import Layout from "./components/Layout";
-import ResetPassword from "./pages/reset-password";
 
 function App() {
   return (
@@ -26,7 +25,6 @@ function App() {
               <BrowserRouter>
                 <Switch>
                   <PublicRoute component={SignIn} path={Paths.SignIn} />
-                  <PublicRoute component={ResetPassword} path={Paths.ResetPassword}/>
                   <PrivateRoute component={Layout} />
                 </Switch>
               </BrowserRouter>
