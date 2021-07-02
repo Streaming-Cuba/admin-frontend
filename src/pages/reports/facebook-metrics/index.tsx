@@ -15,6 +15,7 @@ import { clearVideos } from "../../../redux/reducers/metrics";
 import PageTitle from "../../../components/PageTitle";
 import Video from "../../../types/Video";
 import {useHistory} from "react-router-dom";
+import {Paths} from "../../";
 import useStyles from "./styles"
 
 
@@ -272,7 +273,7 @@ function FacebookMetricsReport(): JSX.Element {
                     <TableContainer className={classes.container}>
                         <Table>
                             <TableHead>
-                                <Typography>5 Paises con mas tiempo de reproducción</Typography>
+                                <Typography>5 Paises con más tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
                                 {Object.keys(totals.ranking_by_country)
@@ -296,7 +297,7 @@ function FacebookMetricsReport(): JSX.Element {
                     <TableContainer  className={classes.container}>
                         <Table>
                             <TableHead>
-                                <Typography>5 Regiones con mas tiempo de reproducción</Typography>
+                                <Typography>5 Regiones con más tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
                                 {Object.keys(totals.ranking_by_region)
@@ -312,6 +313,43 @@ function FacebookMetricsReport(): JSX.Element {
                                             </TableRow>
                                         );
                                     })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TableContainer className={classes.container}>
+                        <Table>
+                            <TableHead>
+                                <Typography>
+                                    Reacciones
+                                </Typography>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>
+                                        Total de Reacciones:
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            Object
+                                                .values(totals.reactions)
+                                                .reduce((previousValue, currentValue) => previousValue + currentValue)
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                                {
+                                    Object
+                                        .keys(totals.reactions)
+                                        .map((value, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>
+                                                    {value.charAt(0).toUpperCase() + value.slice(1)}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {totals.reactions[value]}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                }
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -339,32 +377,6 @@ function FacebookMetricsReport(): JSX.Element {
                                         {totals.shares}
                                     </TableCell>
                                 </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        Total de Reacciones:
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            Object
-                                                .values(totals.reactions)
-                                                .reduce((previousValue, currentValue) => previousValue + currentValue)
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                                {
-                                    Object
-                                        .keys(totals.reactions)
-                                        .map((value, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell>
-                                                    {value.charAt(0).toUpperCase() + value.slice(1)}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {totals.reactions[value]}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                }
                             </TableBody>
                         </Table>
                     </TableContainer>
