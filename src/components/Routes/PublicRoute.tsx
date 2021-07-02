@@ -1,11 +1,11 @@
 import {Redirect, Route, RouteComponentProps} from "react-router";
-import {useTypedSelector} from "../../redux";
+import {useAppSelector} from "../../redux";
 import React from "react";
 
 function PublicRoute(props: PublicRouteProps) {
 
   const {component, ...rest} = props;
-  const isAuthenticated = useTypedSelector(state => state.account.token);
+  const isAuthenticated = useAppSelector(state => state.account.token);
 
   return (
     <Route

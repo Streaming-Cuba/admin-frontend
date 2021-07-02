@@ -14,7 +14,7 @@ import useStyles from "./styles";
 // components
 import SidebarLink from "./components/SidebarLink/SidebarLink";
 
-import {useTypedSelector} from '../../redux'
+import {useAppSelector} from '../../redux'
 import {toggleSidebar} from '../../redux/reducers/layout';
 
 
@@ -25,7 +25,7 @@ function Sidebar({ location }) {
   var classes = useStyles();
   var theme = useTheme();
 
-  var isSidebarOpen = useTypedSelector(state => state.layout.isSidebarOpen);
+  var isSidebarOpen = useAppSelector(state => state.layout.isSidebarOpen);
   const dispatch = useDispatch();
 
   const [isPermanent, setPermanent] = useState(true);

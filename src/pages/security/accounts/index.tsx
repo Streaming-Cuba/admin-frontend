@@ -3,12 +3,13 @@ import PageTitle from "../../../components/PageTitle";
 import {useEffect, useMemo, useState} from "react";
 import AddAccountDialog from "../../../components/AddAccountDIalog";
 import {Avatar, IconButton} from "@material-ui/core";
-import {MoreVert as MoreVertIcon, PersonAdd as PersonAddIcon} from "@material-ui/icons"
+import {PersonAdd as PersonAddIcon} from "@material-ui/icons"
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
 import {DataGrid, GridColDef} from "@material-ui/data-grid";
 import Account from "../../../types/Account";
 import {useServerManager} from "../../../components/ServerManagerProvider";
+import {format, parseISO} from "date-fns";
 
 
 function Accounts() {
@@ -19,7 +20,7 @@ function Accounts() {
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [pageSize, setPageSize] = useState<number>(10);
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [accounts, setAccount] = useState<Account[]>([])
+    const [accounts, setAccounts] = useState<Account[]>([])
 
     const columns = useMemo<GridColDef[]>(() => {
         return [
@@ -28,35 +29,35 @@ function Accounts() {
                 headerName: "Nombre",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.8,
+                flex: 0.6,
             },
             {
                 field: "lastName",
                 headerName: "Apellido",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.8,
+                flex: 0.6,
             },
             {
                 field: "email",
                 headerName: "Email",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.3,
+                flex: 0.6,
             },
             {
-                field: "rol",
+                field: "roles",
                 headerName: "Rol",
                 disableColumnMenu: true,
                 sortable: false,
                 flex: 0.3,
             },
             {
-                field: "createdAt",
+                field: "date",
                 headerName: "Fecha de Creación",
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 0.3,
+                flex: 0.4,
             },
             {
                 field: "avatarPath",
@@ -64,23 +65,34 @@ function Accounts() {
                 disableColumnMenu: true,
                 sortable: false,
                 flex: 0.18,
-                renderCell: () => <Avatar/>
+                renderCell: (params) => <Avatar src={params.row.avatarPath}/>
             }
         ];
     }, []);
 
     useEffect( () => {
+        setLoading(true)
         serverManager
             .loadAccount()
-            .then( r => console.log(r))
-    })
+            .then( r => {
+                r.data.forEach( (value: Account, index: number) => {
+                    value.id = index
+                    value.date = format(parseISO(value.createdAt.toString()), "dd-MM-yyyy")
+                })
+                setAccounts(r.data)
+            })
+            .finally(() => setLoading(false))
+
+    }, [])
 
     return (
         <div>
             <PageTitle title="Cuentas de usuario">
+                {/*
                 <IconButton onClick={() => setIsOpenDialog(true)}>
                     <PersonAddIcon/>
                 </IconButton>
+                    */}
             </PageTitle>
             <AddAccountDialog isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}/>
             <DataGrid

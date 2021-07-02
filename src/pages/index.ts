@@ -14,5 +14,6 @@ export const Paths = {
   Account: "/account",
   Settings: "/account/settings",
   Redirect: "/",
-  CreateEvent: "/events/create-event"
+  CreateEvent: "/events/create-event",
+  MetricsReport: "/reports/metrics"
 };
