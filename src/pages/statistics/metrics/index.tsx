@@ -3,7 +3,7 @@ import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import PageTitle from "../../../components/PageTitle";
-import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
+import { Box, Grid, IconButton, TextField } from "@material-ui/core";
 import {
   DateRange,
   DateRangeDelimiter,
@@ -14,7 +14,7 @@ import { format, parseISO } from "date-fns";
 import Video from "../../../types/Video";
 import VideosInfo from "../../../types/VideosInfo";
 import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
-import DemographicDialog from "../../../components/DemographicDialog";
+import MoreDialog from "../../../components/MoreDialog";
 import {
   MoreVert as MoreVertIcon,
   Refresh as RefreshIcon,
@@ -22,7 +22,6 @@ import {
 } from "@material-ui/icons";
 import useStyles from "./styles";
 import TotalDialog from "../../../components/TotalsDialog";
-import ParseDemographic from "../../../types/ParseDemographic";
 import { useDispatch } from "react-redux";
 import {
   setVideoReports,
@@ -54,25 +53,42 @@ function Metrics() {
     ranking_by_region: {},
     ranking_by_country: {},
   });
-  const [isOpenDemographicDialog, setIsOpenDemographicDialog] =
-    useState<boolean>(false);
-  const [demographicData, setDemographicData] = useState<ParseDemographic>({
-    "F.13-17": "0",
-    "F.18-24": "0",
-    "F.25-34": "0",
-    "F.35-44": "0",
-    "F.45-54": "0",
-    "F.55-64": "0",
-    "F.65+": "0",
-    "M.13-17": "0",
-    "M.18-24": "0",
-    "M.25-34": "0",
-    "M.35-44": "0",
-    "M.45-54": "0",
-    "M.55-64": "0",
-    "M.65+": "0",
-  });
+  const [isOpenMoreDialog, setIsOpenMoreDialog] = useState<boolean>(false);
   const [isOpenTotalDialog, setIsOpenTotalDialog] = useState<boolean>(false);
+  const [videoToMore, setVideoToMore] = useState<Video>({
+    reactions: {
+      like: 0,
+      love: 0,
+      wow: 0,
+      haha: 0,
+      sorry: 0,
+      angry: 0,
+    },
+    comments: 0,
+    shares: 0,
+    demographic: {
+      "F.13-17": 0,
+      "F.18-24": 0,
+      "F.25-34": 0,
+      "F.35-44": 0,
+      "F.45-54": 0,
+      "F.55-64": 0,
+      "F.65+": 0,
+      "M.13-17": 0,
+      "M.18-24": 0,
+      "M.25-34": 0,
+      "M.35-44": 0,
+      "M.45-54": 0,
+      "M.55-64": 0,
+      "M.65+": 0,
+    },
+    length: 0,
+    reach: 0,
+    views: 0,
+    date:"",
+    ranking_by_country: {},
+    ranking_by_region: {}
+  });
 
   const columns = useMemo<GridColDef[]>(() => {
     return [
@@ -201,22 +217,24 @@ function Metrics() {
                 <AssignmentIcon />
               </IconButton>
             )}
+            {/*
             <Button
               variant={"outlined"}
               onClick={() => setIsOpenTotalDialog(true)}
             >
               Totales
             </Button>
+            */}
           </>
         )}
         <IconButton onClick={loadInfo}>
           <RefreshIcon />
         </IconButton>
       </PageTitle>
-      <DemographicDialog
-        isOpen={isOpenDemographicDialog}
-        videoDemographic={demographicData}
-        onClose={() => setIsOpenDemographicDialog(false)}
+      <MoreDialog
+          isOpen={isOpenMoreDialog}
+          video={videoToMore}
+          onClose={() => setIsOpenMoreDialog(false)}
       />
       <TotalDialog
         videosInfo={videosInfo}
@@ -269,47 +287,8 @@ function Metrics() {
         }}
         onCellClick={(param) => {
           if (param.field === "more") {
-            setDemographicData({
-              "F.13-17": secondsToString(
-                param.row.demographic["F.13-17"] / 1000
-              ),
-              "F.18-24": secondsToString(
-                param.row.demographic["F.18-24"] / 1000
-              ),
-              "F.25-34": secondsToString(
-                param.row.demographic["F.25-34"] / 1000
-              ),
-              "F.35-44": secondsToString(
-                param.row.demographic["F.35-44"] / 1000
-              ),
-              "F.45-54": secondsToString(
-                param.row.demographic["F.45-54"] / 1000
-              ),
-              "F.55-64": secondsToString(
-                param.row.demographic["F.55-64"] / 1000
-              ),
-              "F.65+": secondsToString(param.row.demographic["F.65+"] / 1000),
-              "M.13-17": secondsToString(
-                param.row.demographic["M.13-17"] / 1000
-              ),
-              "M.18-24": secondsToString(
-                param.row.demographic["M.18-24"] / 1000
-              ),
-              "M.25-34": secondsToString(
-                param.row.demographic["M.25-34"] / 1000
-              ),
-              "M.35-44": secondsToString(
-                param.row.demographic["M.35-44"] / 1000
-              ),
-              "M.45-54": secondsToString(
-                param.row.demographic["M.45-54"] / 1000
-              ),
-              "M.55-64": secondsToString(
-                param.row.demographic["M.55-64"] / 1000
-              ),
-              "M.65+": secondsToString(param.row.demographic["M.65+"] / 1000),
-            });
-            setIsOpenDemographicDialog(true);
+            setVideoToMore(param.row as Video)
+            setIsOpenMoreDialog(true);
           }
         }}
         components={{

@@ -20,7 +20,7 @@ import useStyles from "./styles"
 
 
 function FacebookMetricsReport(): JSX.Element {
-    const videos = useAppSelector((state) => state.metrics.videos);
+    const videos: Video[] = useAppSelector((state) => state.metrics.videos);
     const dispatch = useDispatch();
     const history = useHistory()
     const classes = useStyles()
@@ -48,6 +48,16 @@ function FacebookMetricsReport(): JSX.Element {
         },
         ranking_by_country: {},
         ranking_by_region: {},
+        reactions:{
+            love: 0,
+            like: 0,
+            haha: 0,
+            wow: 0,
+            sorry: 0,
+            angry: 0
+        },
+        shares: 0,
+        comments: 0
     })
 
     const secondsToString = (seconds: number): string => {
@@ -64,19 +74,35 @@ function FacebookMetricsReport(): JSX.Element {
 
             const total = videos.reduce((previousValue, currentValue) => {
 
-                const newCountries:{[key: string]: number} = {}
-                Object
-                    .keys(previousValue.ranking_by_country)
-                    .forEach(
-                        value => newCountries[value] = previousValue.ranking_by_country[value] + currentValue.ranking_by_country[value]
-                    )
+                const newCountries:{[key: string]: number} = JSON.parse(JSON.stringify(previousValue.ranking_by_country));
+                for (const countryKey in currentValue.ranking_by_country) {
+                    if (previousValue.ranking_by_country[countryKey] !== undefined && currentValue.ranking_by_country[countryKey] !== undefined)
+                        newCountries[countryKey] = previousValue.ranking_by_country[countryKey] + currentValue.ranking_by_country[countryKey]
+                    if (previousValue.ranking_by_country[countryKey] === undefined && currentValue.ranking_by_country[countryKey] !== undefined)
+                        newCountries[countryKey] = currentValue.ranking_by_country[countryKey]
+                    if (previousValue.ranking_by_country[countryKey] !== undefined && currentValue.ranking_by_country[countryKey] === undefined)
+                        newCountries[countryKey] = previousValue.ranking_by_country[countryKey]
+                }
 
-                const newRegion:{[key: string]: number} = {}
-                Object
-                    .keys(previousValue.ranking_by_region)
-                    .forEach(
-                        value => newRegion[value] = previousValue.ranking_by_region[value] + currentValue.ranking_by_region[value]
-                    )
+                const newRegion:{[key: string]: number} = JSON.parse(JSON.stringify(previousValue.ranking_by_region));
+                for (const regionKey in currentValue.ranking_by_region) {
+                    if (previousValue.ranking_by_region[regionKey] !== undefined && currentValue.ranking_by_region[regionKey] !== undefined)
+                        newRegion[regionKey] = previousValue.ranking_by_region[regionKey] + currentValue.ranking_by_region[regionKey]
+                    if (previousValue.ranking_by_region[regionKey] === undefined && currentValue.ranking_by_region[regionKey] !== undefined)
+                        newRegion[regionKey] = currentValue.ranking_by_region[regionKey]
+                    if (previousValue.ranking_by_region[regionKey] !== undefined && currentValue.ranking_by_region[regionKey] === undefined)
+                        newRegion[regionKey] = previousValue.ranking_by_region[regionKey]
+                }
+
+                const newReactions: {[key: string]: number} = JSON.parse(JSON.stringify(previousValue.reactions));
+                for (const reactionKey in currentValue.reactions) {
+                    if (previousValue.reactions[reactionKey] !== undefined && currentValue.reactions[reactionKey] !== undefined)
+                        newReactions[reactionKey] = previousValue.reactions[reactionKey] + currentValue.reactions[reactionKey]
+                    if (previousValue.reactions[reactionKey] === undefined && currentValue.reactions[reactionKey] !== undefined)
+                        newReactions[reactionKey] = currentValue.reactions[reactionKey]
+                    if (previousValue.reactions[reactionKey] !== undefined && currentValue.reactions[reactionKey] === undefined)
+                        newReactions[reactionKey] = previousValue.reactions[reactionKey]
+                }
 
                 return {
                     length: previousValue.length + currentValue.length,
@@ -98,6 +124,9 @@ function FacebookMetricsReport(): JSX.Element {
                         "M.55-64": previousValue.demographic["M.55-64"] + currentValue.demographic["M.55-64"],
                         "M.65+": previousValue.demographic["M.65+"] + currentValue.demographic["M.65+"],
                     },
+                    comments: previousValue.comments + currentValue.comments,
+                    shares: previousValue.shares + currentValue.shares,
+                    reactions: newReactions,
                     ranking_by_country: newCountries,
                     ranking_by_region: newRegion,
                     date: "",
@@ -106,7 +135,7 @@ function FacebookMetricsReport(): JSX.Element {
             setTotals(total)
 
         } else
-            history.push(Paths.StatisticsMetrics)
+            history.goBack()
         return () => {
             dispatch(clearVideos())
         }
@@ -139,104 +168,112 @@ function FacebookMetricsReport(): JSX.Element {
                         </Table>
                     </TableContainer>
                     <TableContainer className={classes.container}>
-                        <Table>
-                            <TableHead>
-                                <Typography>Demografía</Typography>
-                                <TableRow>
-                                    <TableCell/>
-                                    <TableCell>
-                                        Femenino
-                                    </TableCell>
-                                    <TableCell>
-                                        Masculino
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>
-                                        13-17
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["F.13-17"])}
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["M.13-17"])}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        18-24
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["F.18-24"])}
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["M.18-24"])}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        25-34
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["F.25-34"])}
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["M.25-34"])}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        35-44
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["F.35-44"])}
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["M.35-44"])}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        45-54
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["F.45-54"])}
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["M.45-54"])}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        55-64
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["F.55-64"])}
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["M.55-64"])}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        65 +
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["F.65+"])}
-                                    </TableCell>
-                                    <TableCell>
-                                        {secondsToString(totals.demographic["M.65+"])}
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
+                        {
+                            secondsToString(totals.demographic["F.13-17"]) === "NaN:NaN:NaN"? (
+                                <Typography>
+                                    Algunos de los videos seleccionados no tiene estadísticas demográficas
+                                </Typography>
+                            ) : (
+                                <Table>
+                                    <TableHead>
+                                        <Typography>Demografía</Typography>
+                                        <TableRow>
+                                            <TableCell/>
+                                            <TableCell>
+                                                Femenino
+                                            </TableCell>
+                                            <TableCell>
+                                                Masculino
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>
+                                                13-17
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["F.13-17"]/1000)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["M.13-17"]/1000)}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                18-24
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["F.18-24"]/1000)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["M.18-24"]/1000)}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                25-34
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["F.25-34"]/1000)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["M.25-34"]/1000)}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                35-44
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["F.35-44"]/1000)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["M.35-44"]/1000)}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                45-54
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["F.45-54"]/1000)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["M.45-54"]/1000)}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                55-64
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["F.55-64"]/1000)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["M.55-64"]/1000)}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                65 +
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["F.65+"]/1000)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {secondsToString(totals.demographic["M.65+"]/1000)}
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            )
+                        }
                     </TableContainer>
                     <TableContainer className={classes.container}>
                         <Table>
                             <TableHead>
-                                <Typography>5 Paises con mas tiempo de reproducción</Typography>
+                                <Typography>5 Paises con más tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
                                 {Object.keys(totals.ranking_by_country)
@@ -260,7 +297,7 @@ function FacebookMetricsReport(): JSX.Element {
                     <TableContainer  className={classes.container}>
                         <Table>
                             <TableHead>
-                                <Typography>5 Regiones con mas tiempo de reproducción</Typography>
+                                <Typography>5 Regiones con más tiempo de reproducción</Typography>
                             </TableHead>
                             <TableBody>
                                 {Object.keys(totals.ranking_by_region)
@@ -276,6 +313,70 @@ function FacebookMetricsReport(): JSX.Element {
                                             </TableRow>
                                         );
                                     })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TableContainer className={classes.container}>
+                        <Table>
+                            <TableHead>
+                                <Typography>
+                                    Reacciones
+                                </Typography>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>
+                                        Total de Reacciones:
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            Object
+                                                .values(totals.reactions)
+                                                .reduce((previousValue, currentValue) => previousValue + currentValue)
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                                {
+                                    Object
+                                        .keys(totals.reactions)
+                                        .map((value, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>
+                                                    {value.charAt(0).toUpperCase() + value.slice(1)}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {totals.reactions[value]}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TableContainer className={classes.container}>
+                        <Table>
+                            <TableHead>
+                                <Typography>
+                                    Otras Estadísticas
+                                </Typography>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>
+                                        Cantidad de Comentarios:
+                                    </TableCell>
+                                    <TableCell>
+                                        {totals.comments}
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>
+                                        Cantidad de Veces Compartido:
+                                    </TableCell>
+                                    <TableCell>
+                                        {totals.shares}
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
