@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Button,
     Dialog,
@@ -20,6 +20,7 @@ import {
 } from "@material-ui/icons"
 import { TransitionProps } from '@material-ui/core/transitions';
 import Video from "../../types/Video";
+import DemographyTable from "../DemographyTable";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -51,103 +52,12 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                         <DialogTitle>Estadísticas Demográficas</DialogTitle>
                         <DialogContent>
                             {
-                                props.video?.parsedDemographic?.["M.13-17"] === "NaN:NaN:NaN"? (
+                                !props.video.demographic["M.13-17"]? (
                                     <Typography>
                                         Este video no tiene estadísticas demográficas
                                     </Typography>
                                 ) : (
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell/>
-                                                <TableCell>
-                                                    Femenino
-                                                </TableCell>
-                                                <TableCell>
-                                                    Masculino
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            <TableRow>
-                                                <TableCell>
-                                                    13-17
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["F.13-17"]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["M.13-17"]}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>
-                                                    18-24
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["F.18-24"]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["M.18-24"]}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>
-                                                    25-34
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["F.25-34"]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["M.25-34"]}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>
-                                                    35-44
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["F.35-44"]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["M.35-44"]}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>
-                                                    45-54
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["F.45-54"]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["M.45-54"]}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>
-                                                    55-64
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["F.55-64"]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["M.55-64"]}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>
-                                                    65 +
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["F.65+"]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {props.video?.parsedDemographic?.["M.65+"]}
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
+                                   <DemographyTable demographic={props.video.demographic} title={false}/>
                                 )
                             }
                         </DialogContent>
