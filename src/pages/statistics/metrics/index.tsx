@@ -30,6 +30,7 @@ import {
 import { useHistory } from "react-router";
 import { Paths } from "../..";
 import { useAppSelector } from "../../../redux";
+import { secondsToString } from "../../../utils/FormatUtils";
 
 function Metrics() {
   const serverManager = useServerManager();
@@ -85,9 +86,9 @@ function Metrics() {
     length: 0,
     reach: 0,
     views: 0,
-    date:"",
+    date: "",
     ranking_by_country: {},
-    ranking_by_region: {}
+    ranking_by_region: {},
   });
 
   const columns = useMemo<GridColDef[]>(() => {
@@ -138,14 +139,6 @@ function Metrics() {
     ];
   }, []);
 
-  const secondsToString = (seconds: number): string => {
-    const second = Math.round(seconds % 0x3c).toString();
-    const hour = Math.floor(seconds / 0xe10).toString();
-    const minute = (Math.floor(seconds / 0x3c) % 0x3c).toString();
-
-    return hour + ":" + minute + ":" + second;
-  };
-
   const handleClickVariant = useCallback(
     (text: string, variant: VariantType) => () => {
       enqueueSnackbar(text, { variant });
@@ -153,7 +146,7 @@ function Metrics() {
     [enqueueSnackbar]
   );
 
-  const loadInfo = useCallback(() => {
+  const loadInfo = () => {
     if (dateRange[0] !== null && dateRange[1] !== null) {
       setLoading(true);
       serverManager
@@ -166,23 +159,7 @@ function Metrics() {
             video.id = index;
             video.date = format(parseISO(video.date), "dd-MM-yyyy");
             video.duration = secondsToString(video.length);
-            video.more = "Demografía";
-            video.parsedDemographic = {
-              "F.13-17": secondsToString(video.demographic["F.13-17"] / 1000),
-              "F.18-24": secondsToString(video.demographic["F.18-24"] / 1000),
-              "F.25-34": secondsToString(video.demographic["F.25-34"] / 1000),
-              "F.35-44": secondsToString(video.demographic["F.35-44"] / 1000),
-              "F.45-54": secondsToString(video.demographic["F.45-54"] / 1000),
-              "F.55-64": secondsToString(video.demographic["F.55-64"] / 1000),
-              "F.65+": secondsToString(video.demographic["F.65+"] / 1000),
-              "M.13-17": secondsToString(video.demographic["M.13-17"] / 1000),
-              "M.18-24": secondsToString(video.demographic["M.18-24"] / 1000),
-              "M.25-34": secondsToString(video.demographic["M.25-34"] / 1000),
-              "M.35-44": secondsToString(video.demographic["M.35-44"] / 1000),
-              "M.45-54": secondsToString(video.demographic["M.45-54"] / 1000),
-              "M.55-64": secondsToString(video.demographic["M.55-64"] / 1000),
-              "M.65+": secondsToString(video.demographic["M.65+"] / 1000),
-            };
+            video.more = "Más";
           });
           setVideosInfo(r.data);
         })
@@ -201,11 +178,15 @@ function Metrics() {
         })
         .finally(() => setLoading(false));
     }
-  }, [dateRange, handleClickVariant, serverManager]);
+  };
 
   useEffect(() => {
     loadInfo();
-  }, [dateRange, loadInfo]);
+  }, []);
+
+  const refresh = () => {
+    loadInfo();
+  };
 
   return (
     <div>
@@ -232,9 +213,9 @@ function Metrics() {
         </IconButton>
       </PageTitle>
       <MoreDialog
-          isOpen={isOpenMoreDialog}
-          video={videoToMore}
-          onClose={() => setIsOpenMoreDialog(false)}
+        isOpen={isOpenMoreDialog}
+        video={videoToMore}
+        onClose={() => setIsOpenMoreDialog(false)}
       />
       <TotalDialog
         videosInfo={videosInfo}
@@ -252,6 +233,7 @@ function Metrics() {
               value={dateRange}
               allowSameDateSelection={true}
               onChange={(newValue) => setDateRange(newValue)}
+              onClose={refresh}
               renderInput={(startProps, endProps) => (
                 <React.Fragment>
                   <TextField {...startProps} helperText="" fullWidth />
@@ -287,7 +269,7 @@ function Metrics() {
         }}
         onCellClick={(param) => {
           if (param.field === "more") {
-            setVideoToMore(param.row as Video)
+            setVideoToMore(param.row as Video);
             setIsOpenMoreDialog(true);
           }
         }}
