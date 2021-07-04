@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useAppSelector } from "../../../redux";
+import React, {useEffect, useMemo} from "react";
+import {useAppSelector} from "../../../redux";
 import {
   Avatar,
   List,
@@ -14,20 +14,18 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { clearVideos } from "../../../redux/reducers/metrics";
+import {useDispatch} from "react-redux";
 import PageTitle from "../../../components/PageTitle";
 import Video from "../../../types/Video";
-import { Redirect, useHistory } from "react-router-dom";
-import { Paths } from "../../";
+import {Redirect} from "react-router-dom";
+import {Paths} from "../../";
 import useStyles from "./styles";
-import {
-  secondsToString,
-} from "../../../utils/FormatUtils";
-import { Movie as MovieIcon } from "mdi-material-ui";
+import {secondsToString,} from "../../../utils/FormatUtils";
+import {Movie as MovieIcon} from "mdi-material-ui";
 import DemographyTable from "../../../components/DemographyTable";
 import RegionsTopTable from "../../../components/RegionsTopTable";
 import CountriesTopTable from "../../../components/CountriesTopTable";
+import { clearVideos } from "../../../redux/reducers/metrics";
 
 function FacebookMetricsReport(): JSX.Element {
   const videos: Video[] = useAppSelector((state) => state.metrics.videos);
@@ -37,125 +35,125 @@ function FacebookMetricsReport(): JSX.Element {
 
   const totals = useMemo(() => {
     if (videos.length > 0) {
-        const total = videos.reduce((previousValue, currentValue) => {
+      return videos.reduce((previousValue, currentValue) => {
           const newCountries: { [key: string]: number } = JSON.parse(
-            JSON.stringify(previousValue.ranking_by_country)
+              JSON.stringify(previousValue.ranking_by_country)
           );
           for (const countryKey in currentValue.ranking_by_country) {
             if (
-              previousValue.ranking_by_country[countryKey] !== undefined &&
-              currentValue.ranking_by_country[countryKey] !== undefined
+                previousValue.ranking_by_country[countryKey] !== undefined &&
+                currentValue.ranking_by_country[countryKey] !== undefined
             )
               newCountries[countryKey] =
-                previousValue.ranking_by_country[countryKey] +
-                currentValue.ranking_by_country[countryKey];
+                  previousValue.ranking_by_country[countryKey] +
+                  currentValue.ranking_by_country[countryKey];
             if (
-              previousValue.ranking_by_country[countryKey] === undefined &&
-              currentValue.ranking_by_country[countryKey] !== undefined
+                previousValue.ranking_by_country[countryKey] === undefined &&
+                currentValue.ranking_by_country[countryKey] !== undefined
             )
               newCountries[countryKey] =
-                currentValue.ranking_by_country[countryKey];
+                  currentValue.ranking_by_country[countryKey];
             if (
-              previousValue.ranking_by_country[countryKey] !== undefined &&
-              currentValue.ranking_by_country[countryKey] === undefined
+                previousValue.ranking_by_country[countryKey] !== undefined &&
+                currentValue.ranking_by_country[countryKey] === undefined
             )
               newCountries[countryKey] =
-                previousValue.ranking_by_country[countryKey];
+                  previousValue.ranking_by_country[countryKey];
           }
-  
+
           const newRegion: { [key: string]: number } = JSON.parse(
-            JSON.stringify(previousValue.ranking_by_region)
+              JSON.stringify(previousValue.ranking_by_region)
           );
           for (const regionKey in currentValue.ranking_by_region) {
             if (
-              previousValue.ranking_by_region[regionKey] !== undefined &&
-              currentValue.ranking_by_region[regionKey] !== undefined
+                previousValue.ranking_by_region[regionKey] !== undefined &&
+                currentValue.ranking_by_region[regionKey] !== undefined
             )
               newRegion[regionKey] =
-                previousValue.ranking_by_region[regionKey] +
-                currentValue.ranking_by_region[regionKey];
+                  previousValue.ranking_by_region[regionKey] +
+                  currentValue.ranking_by_region[regionKey];
             if (
-              previousValue.ranking_by_region[regionKey] === undefined &&
-              currentValue.ranking_by_region[regionKey] !== undefined
+                previousValue.ranking_by_region[regionKey] === undefined &&
+                currentValue.ranking_by_region[regionKey] !== undefined
             )
               newRegion[regionKey] = currentValue.ranking_by_region[regionKey];
             if (
-              previousValue.ranking_by_region[regionKey] !== undefined &&
-              currentValue.ranking_by_region[regionKey] === undefined
+                previousValue.ranking_by_region[regionKey] !== undefined &&
+                currentValue.ranking_by_region[regionKey] === undefined
             )
               newRegion[regionKey] = previousValue.ranking_by_region[regionKey];
           }
-  
+
           const newReactions: { [key: string]: number } = JSON.parse(
-            JSON.stringify(previousValue.reactions)
+              JSON.stringify(previousValue.reactions)
           );
           for (const reactionKey in currentValue.reactions) {
             if (
-              previousValue.reactions[reactionKey] !== undefined &&
-              currentValue.reactions[reactionKey] !== undefined
+                previousValue.reactions[reactionKey] !== undefined &&
+                currentValue.reactions[reactionKey] !== undefined
             )
               newReactions[reactionKey] =
-                previousValue.reactions[reactionKey] +
-                currentValue.reactions[reactionKey];
+                  previousValue.reactions[reactionKey] +
+                  currentValue.reactions[reactionKey];
             if (
-              previousValue.reactions[reactionKey] === undefined &&
-              currentValue.reactions[reactionKey] !== undefined
+                previousValue.reactions[reactionKey] === undefined &&
+                currentValue.reactions[reactionKey] !== undefined
             )
               newReactions[reactionKey] = currentValue.reactions[reactionKey];
             if (
-              previousValue.reactions[reactionKey] !== undefined &&
-              currentValue.reactions[reactionKey] === undefined
+                previousValue.reactions[reactionKey] !== undefined &&
+                currentValue.reactions[reactionKey] === undefined
             )
               newReactions[reactionKey] = previousValue.reactions[reactionKey];
           }
-  
+
           return {
             length: previousValue.length + currentValue.length,
             views: previousValue.views + currentValue.views,
             reach: previousValue.reach + currentValue.reach,
             demographic: {
               "F.13-17":
-                previousValue.demographic["F.13-17"] +
-                currentValue.demographic["F.13-17"],
+                  previousValue.demographic["F.13-17"] +
+                  currentValue.demographic["F.13-17"],
               "F.18-24":
-                previousValue.demographic["F.18-24"] +
-                currentValue.demographic["F.18-24"],
+                  previousValue.demographic["F.18-24"] +
+                  currentValue.demographic["F.18-24"],
               "F.25-34":
-                previousValue.demographic["F.25-34"] +
-                currentValue.demographic["F.25-34"],
+                  previousValue.demographic["F.25-34"] +
+                  currentValue.demographic["F.25-34"],
               "F.35-44":
-                previousValue.demographic["F.35-44"] +
-                currentValue.demographic["F.35-44"],
+                  previousValue.demographic["F.35-44"] +
+                  currentValue.demographic["F.35-44"],
               "F.45-54":
-                previousValue.demographic["F.45-54"] +
-                currentValue.demographic["F.45-54"],
+                  previousValue.demographic["F.45-54"] +
+                  currentValue.demographic["F.45-54"],
               "F.55-64":
-                previousValue.demographic["F.55-64"] +
-                currentValue.demographic["F.55-64"],
+                  previousValue.demographic["F.55-64"] +
+                  currentValue.demographic["F.55-64"],
               "F.65+":
-                previousValue.demographic["F.65+"] +
-                currentValue.demographic["F.65+"],
+                  previousValue.demographic["F.65+"] +
+                  currentValue.demographic["F.65+"],
               "M.13-17":
-                previousValue.demographic["M.13-17"] +
-                currentValue.demographic["M.13-17"],
+                  previousValue.demographic["M.13-17"] +
+                  currentValue.demographic["M.13-17"],
               "M.18-24":
-                previousValue.demographic["M.18-24"] +
-                currentValue.demographic["M.18-24"],
+                  previousValue.demographic["M.18-24"] +
+                  currentValue.demographic["M.18-24"],
               "M.25-34":
-                previousValue.demographic["M.25-34"] +
-                currentValue.demographic["M.25-34"],
+                  previousValue.demographic["M.25-34"] +
+                  currentValue.demographic["M.25-34"],
               "M.35-44":
-                previousValue.demographic["M.35-44"] +
-                currentValue.demographic["M.35-44"],
+                  previousValue.demographic["M.35-44"] +
+                  currentValue.demographic["M.35-44"],
               "M.45-54":
-                previousValue.demographic["M.45-54"] +
-                currentValue.demographic["M.45-54"],
+                  previousValue.demographic["M.45-54"] +
+                  currentValue.demographic["M.45-54"],
               "M.55-64":
-                previousValue.demographic["M.55-64"] +
-                currentValue.demographic["M.55-64"],
+                  previousValue.demographic["M.55-64"] +
+                  currentValue.demographic["M.55-64"],
               "M.65+":
-                previousValue.demographic["M.65+"] +
-                currentValue.demographic["M.65+"],
+                  previousValue.demographic["M.65+"] +
+                  currentValue.demographic["M.65+"],
             },
             comments: previousValue.comments + currentValue.comments,
             shares: previousValue.shares + currentValue.shares,
@@ -165,8 +163,6 @@ function FacebookMetricsReport(): JSX.Element {
             date: "",
           };
         });
-  
-        return total;
       }
 
     return {
@@ -205,11 +201,12 @@ function FacebookMetricsReport(): JSX.Element {
       }
   }, [])
 
-  useEffect(() => {
-    return () => {
-      //dispatch(clearVideos());
-    };
-  }, []);
+  useEffect(() => (
+      () => {
+        dispatch(clearVideos());
+      }
+  ), [])
+
 
   const getReactionImage = (reaction: string): string => {
     switch (reaction) {
