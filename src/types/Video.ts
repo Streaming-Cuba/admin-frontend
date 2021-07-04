@@ -1,5 +1,4 @@
 import Demographic from "./Demographic";
-import ParsedDemographic from "./ParseDemographic";
 
 type Video = {
     id?: number,
@@ -11,7 +10,6 @@ type Video = {
     duration?: string,
     more?: string,
     demographic: Demographic,
-    parsedDemographic?: ParsedDemographic,
     ranking_by_region: {[key: string]: number},
     ranking_by_country: {[key: string]: number},
     comments: number,

@@ -159,23 +159,7 @@ function Metrics() {
             video.id = index;
             video.date = format(parseISO(video.date), "dd-MM-yyyy");
             video.duration = secondsToString(video.length);
-            video.more = "Demografía";
-            video.parsedDemographic = {
-              "F.13-17": secondsToString(video.demographic["F.13-17"] / 1000),
-              "F.18-24": secondsToString(video.demographic["F.18-24"] / 1000),
-              "F.25-34": secondsToString(video.demographic["F.25-34"] / 1000),
-              "F.35-44": secondsToString(video.demographic["F.35-44"] / 1000),
-              "F.45-54": secondsToString(video.demographic["F.45-54"] / 1000),
-              "F.55-64": secondsToString(video.demographic["F.55-64"] / 1000),
-              "F.65+": secondsToString(video.demographic["F.65+"] / 1000),
-              "M.13-17": secondsToString(video.demographic["M.13-17"] / 1000),
-              "M.18-24": secondsToString(video.demographic["M.18-24"] / 1000),
-              "M.25-34": secondsToString(video.demographic["M.25-34"] / 1000),
-              "M.35-44": secondsToString(video.demographic["M.35-44"] / 1000),
-              "M.45-54": secondsToString(video.demographic["M.45-54"] / 1000),
-              "M.55-64": secondsToString(video.demographic["M.55-64"] / 1000),
-              "M.65+": secondsToString(video.demographic["M.65+"] / 1000),
-            };
+            video.more = "Más";
           });
           setVideosInfo(r.data);
         })
