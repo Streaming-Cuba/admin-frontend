@@ -25,6 +25,10 @@ import {
   secondsToString,
   getFlagUrlByCountry,
 } from "../../../utils/FormatUtils";
+import { Movie as MovieIcon } from "mdi-material-ui";
+import DemographyTable from "../../../components/DemographyTable";
+import RegionsTopTable from "../../../components/RegionsTopTable";
+import CountriesTopTable from "../../../components/CountriesTopTable";
 
 function FacebookMetricsReport(): JSX.Element {
   const videos: Video[] = useAppSelector((state) => state.metrics.videos);
@@ -205,28 +209,6 @@ function FacebookMetricsReport(): JSX.Element {
     };
   }, []);
 
-  const renderTopCountries = () => {
-    let topCountries = Object.keys(totals.ranking_by_country)
-      .sort(
-        (a, b) => totals.ranking_by_country[b] - totals.ranking_by_country[a]
-      )
-      .splice(0, 5);
-
-    return topCountries.map((value, index) => {
-      return (
-        <TableRow key={index}>
-          <TableCell className={classes.cellWithImg}>
-            <img src={getFlagUrlByCountry(value)}/>
-            {value}
-          </TableCell>
-          <TableCell>
-            {secondsToString(totals.ranking_by_country[value] * 60)}
-          </TableCell>
-        </TableRow>
-      );
-    });
-  };
-
   const getReactionImage = (reaction: string): string => {
     switch (reaction) {
       case "like":
@@ -259,15 +241,17 @@ function FacebookMetricsReport(): JSX.Element {
               <TableBody>
                 <TableRow>
                   <TableCell>Alcance Total:</TableCell>
-                  <TableCell>{totals.reach}</TableCell>
+                  <TableCell align="right">{totals.reach}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Vistas Totales:</TableCell>
-                  <TableCell>{totals.views}</TableCell>
+                  <TableCell align="right">{totals.views}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Duración Total:</TableCell>
-                  <TableCell>{secondsToString(totals.length)}</TableCell>
+                  <TableCell align="right">
+                    {secondsToString(totals.length)}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -280,119 +264,14 @@ function FacebookMetricsReport(): JSX.Element {
                 demográficas
               </Typography>
             ) : (
-              <Table>
-                <TableHead>
-                  <Typography>Demografía</Typography>
-                  <TableRow>
-                    <TableCell />
-                    <TableCell>Femenino</TableCell>
-                    <TableCell>Masculino</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>13-17</TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["F.13-17"] / 1000)}
-                    </TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["M.13-17"] / 1000)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>18-24</TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["F.18-24"] / 1000)}
-                    </TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["M.18-24"] / 1000)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>25-34</TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["F.25-34"] / 1000)}
-                    </TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["M.25-34"] / 1000)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>35-44</TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["F.35-44"] / 1000)}
-                    </TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["M.35-44"] / 1000)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>45-54</TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["F.45-54"] / 1000)}
-                    </TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["M.45-54"] / 1000)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>55-64</TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["F.55-64"] / 1000)}
-                    </TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["M.55-64"] / 1000)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>65 +</TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["F.65+"] / 1000)}
-                    </TableCell>
-                    <TableCell>
-                      {secondsToString(totals.demographic["M.65+"] / 1000)}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <DemographyTable demographic={totals.demographic} />
             )}
           </TableContainer>
           <TableContainer className={classes.container}>
-            <Table>
-              <TableHead>
-                <Typography>5 Paises con más tiempo de reproducción</Typography>
-              </TableHead>
-              <TableBody>{renderTopCountries()}</TableBody>
-            </Table>
+            <CountriesTopTable countries={totals.ranking_by_country} />
           </TableContainer>
           <TableContainer className={classes.container}>
-            <Table>
-              <TableHead>
-                <Typography>
-                  5 Regiones con más tiempo de reproducción
-                </Typography>
-              </TableHead>
-              <TableBody>
-                {Object.keys(totals.ranking_by_region)
-                  .sort(
-                    (a, b) =>
-                      totals.ranking_by_region[b] - totals.ranking_by_region[a]
-                  )
-                  .splice(0, 5)
-                  .map((value, index) => {
-                    return (
-                      <TableRow key={index}>
-                        <TableCell>{value}</TableCell>
-                        <TableCell>
-                          {secondsToString(
-                            totals.ranking_by_region[value] / 1000
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
+            <RegionsTopTable regions={totals.ranking_by_region} />
           </TableContainer>
           <TableContainer className={classes.container}>
             <Table>
@@ -402,7 +281,7 @@ function FacebookMetricsReport(): JSX.Element {
               <TableBody>
                 <TableRow>
                   <TableCell>Total de Reacciones:</TableCell>
-                  <TableCell>
+                  <TableCell align="right">
                     {Object.values(totals.reactions).reduce(
                       (previousValue, currentValue) =>
                         previousValue + currentValue
@@ -412,10 +291,15 @@ function FacebookMetricsReport(): JSX.Element {
                 {Object.keys(totals.reactions).map((value, index) => (
                   <TableRow key={index}>
                     <TableCell className={classes.cellWithImg}>
-                      <img src={getReactionImage(value)} style={{maxWidth: '24px'}} />
+                      <img
+                        src={getReactionImage(value)}
+                        style={{ maxWidth: "24px" }}
+                      />
                       {value.charAt(0).toUpperCase() + value.slice(1)}
                     </TableCell>
-                    <TableCell>{totals.reactions[value]}</TableCell>
+                    <TableCell align="right">
+                      {totals.reactions[value]}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -429,20 +313,25 @@ function FacebookMetricsReport(): JSX.Element {
               <TableBody>
                 <TableRow>
                   <TableCell>Cantidad de Comentarios:</TableCell>
-                  <TableCell>{totals.comments}</TableCell>
+                  <TableCell align="right">{totals.comments}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Cantidad de Veces Compartido:</TableCell>
-                  <TableCell>{totals.shares}</TableCell>
+                  <TableCell align="right">{totals.shares}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
+
           <List className={classes.container}>
             <Typography>Videos</Typography>
             {videos.map((video, index) => (
               <ListItem key={index}>
-                <ListItemIcon>-</ListItemIcon>
+                <ListItemIcon>
+                  <Avatar>
+                    <MovieIcon />
+                  </Avatar>
+                </ListItemIcon>
                 <ListItemText>{video.title}</ListItemText>
               </ListItem>
             ))}
