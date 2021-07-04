@@ -8,7 +8,7 @@ export default makeStyles(() => ({
   container: {
     marginTop: "3em",
   },
-  flagCell: {
+  cellWithImg: {
     display: "flex",
     alignItems: "center",
 

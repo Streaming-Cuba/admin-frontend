@@ -215,8 +215,8 @@ function FacebookMetricsReport(): JSX.Element {
     return topCountries.map((value, index) => {
       return (
         <TableRow key={index}>
-          <TableCell className={classes.flagCell}>
-            <img src={getFlagUrlByCountry(value)} />
+          <TableCell className={classes.cellWithImg}>
+            <img src={getFlagUrlByCountry(value)}/>
             {value}
           </TableCell>
           <TableCell>
@@ -225,6 +225,25 @@ function FacebookMetricsReport(): JSX.Element {
         </TableRow>
       );
     });
+  };
+
+  const getReactionImage = (reaction: string): string => {
+    switch (reaction) {
+      case "like":
+        return "https://cdn.iconscout.com/icon/free/png-128/like-2387659-1991059.png";
+      case "love":
+        return "https://cdn.iconscout.com/icon/free/png-128/love-2387666-1991064.png";
+      case "wow":
+        return "https://cdn.iconscout.com/icon/free/png-128/wow-2387663-1991062.png";
+      case "haha":
+        return "https://cdn.iconscout.com/icon/free/png-128/haha-2387660-1991060.png";
+      case "sorry":
+        return "https://cdn.iconscout.com/icon/free/png-128/sad-2387665-1991063.png";
+      case "anger":
+        return "https://cdn.iconscout.com/icon/free/png-128/angry-2387661-1991061.png";
+      default:
+        return "";
+    }
   };
 
   if (videos.length > 0)
@@ -392,7 +411,8 @@ function FacebookMetricsReport(): JSX.Element {
                 </TableRow>
                 {Object.keys(totals.reactions).map((value, index) => (
                   <TableRow key={index}>
-                    <TableCell>
+                    <TableCell className={classes.cellWithImg}>
+                      <img src={getReactionImage(value)} style={{maxWidth: '24px'}} />
                       {value.charAt(0).toUpperCase() + value.slice(1)}
                     </TableCell>
                     <TableCell>{totals.reactions[value]}</TableCell>
