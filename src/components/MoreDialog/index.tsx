@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {
     Button,
     Dialog,
@@ -9,7 +9,6 @@ import {
     TableCell,
     TableRow,
     Table,
-    TableHead,
     TableBody,
     Typography,
     IconButton
@@ -21,6 +20,9 @@ import {
 import { TransitionProps } from '@material-ui/core/transitions';
 import Video from "../../types/Video";
 import DemographyTable from "../DemographyTable";
+import CountriesTopTable from "../CountriesTopTable";
+import RegionsTopTable from "../RegionsTopTable";
+import ReactionTable from "../ReactionsTable";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -37,7 +39,7 @@ interface MoreDialogProps {
 
 export default function MoreDialog (props: MoreDialogProps): JSX.Element {
 
-    const [currentPage, setCurrentPage] = useState<1|2>(1)
+    const [currentPage, setCurrentPage] = useState<number>(1)
 
     return (
         <Dialog
@@ -48,7 +50,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
         >
             {
                 currentPage === 1 && (
-                    <div>
+                    <>
                         <DialogTitle>Estadísticas Demográficas</DialogTitle>
                         <DialogContent>
                             {
@@ -57,16 +59,50 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                                         Este video no tiene estadísticas demográficas
                                     </Typography>
                                 ) : (
-                                   <DemographyTable demographic={props.video.demographic} title={false}/>
+                                   <DemographyTable demographic={props.video.demographic} disableTitle />
                                 )
                             }
                         </DialogContent>
-                    </div>
+                    </>
                 )
             }
             {
                 currentPage === 2 && (
-                    <div>
+                    <>
+                        <DialogTitle>
+                            5 Paises con más tiempo de reproducción
+                        </DialogTitle>
+                        <DialogContent>
+                            <CountriesTopTable countries={props.video.ranking_by_country} disableTitle/>
+                        </DialogContent>
+                    </>
+                )
+            }
+            {
+                currentPage === 3 && (
+                    <>
+                        <DialogTitle>
+                            5 Regiones con más tiempo de reproducción
+                        </DialogTitle>
+                        <DialogContent>
+                            <RegionsTopTable regions={props.video.ranking_by_region} disableTitle/>
+                        </DialogContent>
+                    </>
+                )
+            }
+            {
+                currentPage === 4 && (
+                    <>
+                        <DialogTitle>Reacciones</DialogTitle>
+                        <DialogContent>
+                            <ReactionTable reactions={props.video.reactions} disableTithe />
+                        </DialogContent>
+                    </>
+                )
+            }
+            {
+                currentPage === 5 && (
+                    <>
                         <DialogTitle>Otras Estadísticas</DialogTitle>
                         <DialogContent>
                             <Table>
@@ -87,48 +123,22 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                                             {props.video.shares}
                                         </TableCell>
                                     </TableRow>
-                                    <TableRow>
-                                        <TableCell>
-                                            Total de Reacciones:
-                                        </TableCell>
-                                        <TableCell>
-                                            {
-                                                Object
-                                                    .values(props.video.reactions)
-                                                    .reduce((previousValue, currentValue) => previousValue + currentValue)
-                                            }
-                                        </TableCell>
-                                    </TableRow>
-                                    {
-                                        Object
-                                            .keys(props.video.reactions)
-                                            .map((value, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell>
-                                                        {value.charAt(0).toUpperCase() + value.slice(1)}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {props.video.reactions[value]}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))
-                                    }
                                 </TableBody>
                             </Table>
                         </DialogContent>
-                    </div>
+                    </>
                 )
             }
             <DialogActions>
                 <IconButton
-                    onClick={() => setCurrentPage(1)}
+                    onClick={() => setCurrentPage(prevState => prevState - 1)}
                     disabled={currentPage === 1}
                 >
                     <KeyboardArrowLeftIcon/>
                 </IconButton>
                 <IconButton
-                    onClick={() => setCurrentPage(2)}
-                    disabled={currentPage === 2}
+                    onClick={() => setCurrentPage(prevState => prevState + 1)}
+                    disabled={currentPage === 5}
                 >
                     <KeyboardArrowRightIcon/>
                 </IconButton>

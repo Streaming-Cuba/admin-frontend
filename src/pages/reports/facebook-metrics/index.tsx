@@ -26,6 +26,7 @@ import DemographyTable from "../../../components/DemographyTable";
 import RegionsTopTable from "../../../components/RegionsTopTable";
 import CountriesTopTable from "../../../components/CountriesTopTable";
 import { clearVideos } from "../../../redux/reducers/metrics";
+import ReactionTable from "../../../components/ReactionsTable";
 
 function FacebookMetricsReport(): JSX.Element {
   const videos: Video[] = useAppSelector((state) => state.metrics.videos);
@@ -207,26 +208,6 @@ function FacebookMetricsReport(): JSX.Element {
       }
   ), [])
 
-
-  const getReactionImage = (reaction: string): string => {
-    switch (reaction) {
-      case "like":
-        return "https://cdn.iconscout.com/icon/free/png-128/like-2387659-1991059.png";
-      case "love":
-        return "https://cdn.iconscout.com/icon/free/png-128/love-2387666-1991064.png";
-      case "wow":
-        return "https://cdn.iconscout.com/icon/free/png-128/wow-2387663-1991062.png";
-      case "haha":
-        return "https://cdn.iconscout.com/icon/free/png-128/haha-2387660-1991060.png";
-      case "sorry":
-        return "https://cdn.iconscout.com/icon/free/png-128/sad-2387665-1991063.png";
-      case "anger":
-        return "https://cdn.iconscout.com/icon/free/png-128/angry-2387661-1991061.png";
-      default:
-        return "";
-    }
-  };
-
   if (videos.length > 0)
     return (
       <>
@@ -273,36 +254,7 @@ function FacebookMetricsReport(): JSX.Element {
             <RegionsTopTable regions={totals.ranking_by_region} />
           </TableContainer>
           <TableContainer className={classes.container}>
-            <Table>
-              <TableHead>
-                <Typography>Reacciones</Typography>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Total de Reacciones:</TableCell>
-                  <TableCell align="right">
-                    {Object.values(totals.reactions).reduce(
-                      (previousValue, currentValue) =>
-                        previousValue + currentValue
-                    )}
-                  </TableCell>
-                </TableRow>
-                {Object.keys(totals.reactions).map((value, index) => (
-                  <TableRow key={index}>
-                    <TableCell className={classes.cellWithImg}>
-                      <img
-                        src={getReactionImage(value)}
-                        style={{ maxWidth: "24px" }}
-                      />
-                      {value.charAt(0).toUpperCase() + value.slice(1)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {totals.reactions[value]}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <ReactionTable reactions={totals.reactions}/>
           </TableContainer>
           <TableContainer className={classes.container}>
             <Table>

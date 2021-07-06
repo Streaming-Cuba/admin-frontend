@@ -8,12 +8,4 @@ export default makeStyles(() => ({
   container: {
     marginTop: "3em",
   },
-  cellWithImg: {
-    display: "flex",
-    alignItems: "center",
-
-    "& img": {
-      marginRight: 5,
-    }
-  },
 }));
