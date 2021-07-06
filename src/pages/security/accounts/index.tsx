@@ -88,11 +88,9 @@ function Accounts() {
     return (
         <div>
             <PageTitle title="Cuentas de usuario">
-                {/*
                 <IconButton onClick={() => setIsOpenDialog(true)}>
                     <PersonAddIcon/>
                 </IconButton>
-                    */}
             </PageTitle>
             <AddAccountDialog isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}/>
             <DataGrid
