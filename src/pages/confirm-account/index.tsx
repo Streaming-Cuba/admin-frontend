@@ -4,6 +4,7 @@ import {VpnKey as VpnKeyIcon} from "@material-ui/icons";
 import {useServerManager} from "../../components/ServerManagerProvider";
 import {useHistory} from "react-router-dom";
 import useStyles from "./styles";
+import {Paths} from "../index";
 
 interface ResetPasswordForm {
     password: string|null,
@@ -30,13 +31,9 @@ export default function ConfirmAccount(): JSX.Element {
         setLoading(true)
         serverManager
             .confirmAccount(history.location.search.split("=")[1], resetPasswordForm.password as string)
-            .then(r => console.log(r) )
+            .then(r => history.replace(Paths.SignIn) )
             .finally(() => setLoading(false))
     }
-
-    useEffect(() => {
-
-    }, [])
 
     return (
         <div className={classes.root}>
