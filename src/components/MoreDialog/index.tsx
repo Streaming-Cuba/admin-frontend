@@ -123,6 +123,14 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                                             {props.video.shares}
                                         </TableCell>
                                     </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Cantidad de Páginas Enlazadas:
+                                        </TableCell>
+                                        <TableCell>
+                                            {props.video.crosspost_count}
+                                        </TableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </DialogContent>

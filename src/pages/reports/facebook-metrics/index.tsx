@@ -158,6 +158,7 @@ function FacebookMetricsReport(): JSX.Element {
             },
             comments: previousValue.comments + currentValue.comments,
             shares: previousValue.shares + currentValue.shares,
+            crosspost_count: previousValue.crosspost_count + currentValue.crosspost_count,
             reactions: newReactions,
             ranking_by_country: newCountries,
             ranking_by_region: newRegion,
@@ -268,6 +269,10 @@ function FacebookMetricsReport(): JSX.Element {
                 </TableRow>
                 <TableRow>
                   <TableCell>Cantidad de Veces Compartido:</TableCell>
+                  <TableCell align="right">{totals.shares}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Cantidad de Páginas Enlazadas:</TableCell>
                   <TableCell align="right">{totals.shares}</TableCell>
                 </TableRow>
               </TableBody>
