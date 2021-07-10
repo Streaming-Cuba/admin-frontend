@@ -11,15 +11,15 @@ import { secondsToString } from "../../utils/FormatUtils";
 
 type DemographicTableProps = {
   demographic: Demographic;
-  title?: boolean
+  disableTitle?: boolean
 };
 
-function DemographyTable({ demographic, title }: DemographicTableProps) {
+function DemographyTable({ demographic, disableTitle }: DemographicTableProps) {
   return (
     <Table>
       <TableHead>
         {
-          title !== false && <Typography>Demografía</Typography>
+          !disableTitle && <Typography>Demografía</Typography>
         }
         <TableRow>
           <TableCell>Rango de edad</TableCell>

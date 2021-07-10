@@ -14,6 +14,7 @@ type Video = {
     ranking_by_country: {[key: string]: number},
     comments: number,
     reactions: {[key: string]: number},
-    shares: number
+    shares: number,
+    crosspost_count: number
 }
 export default Video

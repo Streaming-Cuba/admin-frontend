@@ -7,18 +7,28 @@ import {
   TableCell,
 } from "@material-ui/core";
 import { secondsToString } from "../../utils/FormatUtils";
+import React from "react";
 
 type RegionsTopTableProps = {
   regions: { [key: string]: number };
+  disableTitle?: boolean
 };
 
-function RegionsTopTable({ regions }: RegionsTopTableProps) {
+function RegionsTopTable({ regions, disableTitle }: RegionsTopTableProps) {
   return (
     <Table>
       <TableHead>
-        <Typography>5 Regiones con más tiempo de reproducción</Typography>
+          {
+             !disableTitle && <Typography>5 Regiones con más tiempo de reproducción</Typography>
+          }
       </TableHead>
       <TableBody>
+          <TableRow>
+              <TableCell>Total de Regiones:</TableCell>
+              <TableCell align="right">
+                  {Object.keys(regions).length}
+              </TableCell>
+          </TableRow>
         {Object.keys(regions)
           .sort((a, b) => regions[b] - regions[a])
           .splice(0, 5)

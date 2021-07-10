@@ -89,6 +89,7 @@ function Metrics() {
     date: "",
     ranking_by_country: {},
     ranking_by_region: {},
+    crosspost_count: 0
   });
 
   const columns = useMemo<GridColDef[]>(() => {
