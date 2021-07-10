@@ -15,5 +15,6 @@ export const Paths = {
   Settings: "/account/settings",
   Redirect: "/",
   ResetPassword: "/reset-password",
-  MetricsReport: "/reports/metrics"
+  MetricsReport: "/reports/metrics",
+  ConfirmAccount: "/confirm-account",
 };

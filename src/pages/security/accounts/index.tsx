@@ -70,7 +70,7 @@ function Accounts() {
         ];
     }, []);
 
-    useEffect( () => {
+    const loadUsers = () => {
         setLoading(true)
         serverManager
             .loadAccount()
@@ -83,18 +83,23 @@ function Accounts() {
             })
             .finally(() => setLoading(false))
 
+    }
+
+    useEffect( () => {
+        loadUsers()
     }, [])
 
     return (
         <div>
             <PageTitle title="Cuentas de usuario">
-                {/*
                 <IconButton onClick={() => setIsOpenDialog(true)}>
                     <PersonAddIcon/>
                 </IconButton>
-                    */}
             </PageTitle>
-            <AddAccountDialog isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}/>
+            <AddAccountDialog isOpen={isOpenDialog} onClose={() => {
+                setIsOpenDialog(false)
+                loadUsers()
+            }}/>
             <DataGrid
                 rows={accounts}
                 columns={columns}

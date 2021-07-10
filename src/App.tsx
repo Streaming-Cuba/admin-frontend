@@ -10,9 +10,9 @@ import PublicRoute from "./components/Routes/PublicRoute";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import { LocalizationProvider } from "@material-ui/pickers";
 import esLocale from "date-fns/locale/es";
-
 import { SignIn, Paths } from "./pages";
 import Layout from "./components/Layout";
+import ConfirmAccount from "./pages/confirm-account";
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
               <BrowserRouter>
                 <Switch>
                   <PublicRoute component={SignIn} path={Paths.SignIn} />
+                  <PublicRoute component={ConfirmAccount} path={Paths.ConfirmAccount} />
                   <PrivateRoute component={Layout} />
                 </Switch>
               </BrowserRouter>

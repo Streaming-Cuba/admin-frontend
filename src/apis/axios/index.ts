@@ -49,6 +49,20 @@ class ServerManager {
     });
   }
 
+  confirmAccount (token: string, password: string): Promise<AxiosResponse<any>> {
+    let url = '/api/v1/auth/confirm-account'
+    let body = new FormData()
+    body.set("password", password)
+    return this.apiAxios.post(url,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": 'multipart/form-data'
+          }
+        })
+  }
+
   uploadFile(file: File, path?: string) {
     let url = `/api/v1/media/file`;
     if (path) url = url + `/${path}`;
