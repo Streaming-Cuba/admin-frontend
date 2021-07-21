@@ -3,7 +3,7 @@ import {makeStyles, Table, TableBody, TableCell, TableHead, TableRow, Typography
 
 interface ReactionsTableProps {
     reactions: {[key: string]: number},
-    disableTithe?: boolean
+    disableTitle?: boolean
 }
 
 const useStyles = makeStyles(() => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-export default function ReactionTable ({ reactions, disableTithe }: ReactionsTableProps): JSX.Element {
+export default function ReactionTable ({ reactions, disableTitle }: ReactionsTableProps): JSX.Element {
 
     const classes = useStyles()
 
@@ -44,7 +44,7 @@ export default function ReactionTable ({ reactions, disableTithe }: ReactionsTab
         <Table>
             <TableHead>
                 {
-                    !disableTithe && <Typography>Reacciones</Typography>
+                    !disableTitle && <Typography>Reacciones</Typography>
                 }
             </TableHead>
             <TableBody>

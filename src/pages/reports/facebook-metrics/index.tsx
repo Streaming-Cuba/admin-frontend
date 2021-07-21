@@ -200,6 +200,7 @@ function FacebookMetricsReport(): JSX.Element {
         },
         shares: 0,
         comments: 0,
+      crosspost_count: 0,
       }
   }, [])
 
@@ -273,7 +274,7 @@ function FacebookMetricsReport(): JSX.Element {
                 </TableRow>
                 <TableRow>
                   <TableCell>Cantidad de Páginas Enlazadas:</TableCell>
-                  <TableCell align="right">{totals.shares}</TableCell>
+                  <TableCell align="right">{totals.crosspost_count}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
