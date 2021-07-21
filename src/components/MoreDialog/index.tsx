@@ -95,7 +95,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                     <>
                         <DialogTitle>Reacciones</DialogTitle>
                         <DialogContent>
-                            <ReactionTable reactions={props.video.reactions} disableTithe />
+                            <ReactionTable reactions={props.video.reactions} disableTitle />
                         </DialogContent>
                     </>
                 )
@@ -112,7 +112,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                                             Cantidad de Comentarios:
                                         </TableCell>
                                         <TableCell>
-                                            {props.video.comments}
+                                            {props.video.comments || 0}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
@@ -120,7 +120,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                                             Cantidad de Veces Compartido:
                                         </TableCell>
                                         <TableCell>
-                                            {props.video.shares}
+                                            {props.video.shares || 0}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
@@ -128,7 +128,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                                             Cantidad de Páginas Enlazadas:
                                         </TableCell>
                                         <TableCell>
-                                            {props.video.crosspost_count}
+                                            {props.video.crosspost_count || 0}
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
