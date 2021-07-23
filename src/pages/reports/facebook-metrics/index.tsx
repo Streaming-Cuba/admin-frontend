@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useRef, LegacyRef} from "react";
 import {useAppSelector} from "../../../redux";
 import {
   Avatar,
@@ -27,11 +27,18 @@ import RegionsTopTable from "../../../components/RegionsTopTable";
 import CountriesTopTable from "../../../components/CountriesTopTable";
 import { clearVideos } from "../../../redux/reducers/metrics";
 import ReactionTable from "../../../components/ReactionsTable";
+// @ts-ignore
+import ReactToPdf from "react-to-pdf"
+
+interface pdfParams {
+  toPdf: () => any
+}
 
 function FacebookMetricsReport(): JSX.Element {
   const videos: Video[] = useAppSelector((state) => state.metrics.videos);
   const dispatch = useDispatch();
   const classes = useStyles();
+  const pdfRef = useRef(null)
 
 
   const totals = useMemo(() => {
@@ -204,6 +211,12 @@ function FacebookMetricsReport(): JSX.Element {
       }
   }, [])
 
+  const pdfOptions = {
+    orientation: 'portrait',
+    unit: 'in',
+    format: [36,12]
+  };
+
   useEffect(() => (
       () => {
         dispatch(clearVideos());
@@ -213,87 +226,102 @@ function FacebookMetricsReport(): JSX.Element {
   if (videos.length > 0)
     return (
       <>
-        <PageTitle title="Estadíticas de Videos Seleccionados" />
-        <div className={classes.layout}>
-          <TableContainer className={classes.container}>
-            <Table title="Totales">
-              <TableHead>
-                <Typography>Totales</Typography>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Alcance Total:</TableCell>
-                  <TableCell align="right">{totals.reach}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Vistas Totales:</TableCell>
-                  <TableCell align="right">{totals.views}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Duración Total:</TableCell>
-                  <TableCell align="right">
-                    {secondsToString(totals.length)}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TableContainer className={classes.container}>
-            {secondsToString(totals.demographic["F.13-17"]) ===
-            "NaN:NaN:NaN" ? (
-              <Typography>
-                Algunos de los videos seleccionados no tiene estadísticas
-                demográficas
-              </Typography>
-            ) : (
-              <DemographyTable demographic={totals.demographic} />
-            )}
-          </TableContainer>
-          <TableContainer className={classes.container}>
-            <CountriesTopTable countries={totals.ranking_by_country} />
-          </TableContainer>
-          <TableContainer className={classes.container}>
-            <RegionsTopTable regions={totals.ranking_by_region} />
-          </TableContainer>
-          <TableContainer className={classes.container}>
-            <ReactionTable reactions={totals.reactions}/>
-          </TableContainer>
-          <TableContainer className={classes.container}>
-            <Table>
-              <TableHead>
-                <Typography>Otras Estadísticas</Typography>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Cantidad de Comentarios:</TableCell>
-                  <TableCell align="right">{totals.comments}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Cantidad de Veces Compartido:</TableCell>
-                  <TableCell align="right">{totals.shares}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Cantidad de Páginas Enlazadas:</TableCell>
-                  <TableCell align="right">{totals.crosspost_count}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+        <div ref={pdfRef}>
+          <PageTitle title="Estadíticas de Videos Seleccionados" />
+          <div className={classes.layout}>
+            <TableContainer className={classes.container}>
+              <Table title="Totales">
+                <TableHead>
+                  <Typography>Totales</Typography>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Alcance Total:</TableCell>
+                    <TableCell align="right">{totals.reach}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Vistas Totales:</TableCell>
+                    <TableCell align="right">{totals.views}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Duración Total:</TableCell>
+                    <TableCell align="right">
+                      {secondsToString(totals.length)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TableContainer className={classes.container}>
+              {secondsToString(totals.demographic["F.13-17"]) ===
+              "NaN:NaN:NaN" ? (
+                  <Typography>
+                    Algunos de los videos seleccionados no tiene estadísticas
+                    demográficas
+                  </Typography>
+              ) : (
+                  <DemographyTable demographic={totals.demographic} />
+              )}
+            </TableContainer>
+            <TableContainer className={classes.container}>
+              <CountriesTopTable countries={totals.ranking_by_country} />
+            </TableContainer>
+            <TableContainer className={classes.container}>
+              <RegionsTopTable regions={totals.ranking_by_region} />
+            </TableContainer>
+            <TableContainer className={classes.container}>
+              <ReactionTable reactions={totals.reactions}/>
+            </TableContainer>
+            <TableContainer className={classes.container}>
+              <Table>
+                <TableHead>
+                  <Typography>Otras Estadísticas</Typography>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Cantidad de Comentarios:</TableCell>
+                    <TableCell align="right">{totals.comments}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Cantidad de Veces Compartido:</TableCell>
+                    <TableCell align="right">{totals.shares}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Cantidad de Páginas Enlazadas:</TableCell>
+                    <TableCell align="right">{totals.crosspost_count}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-          <List className={classes.container}>
-            <Typography>Videos</Typography>
-            {videos.map((video, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  <Avatar>
-                    <MovieIcon />
-                  </Avatar>
-                </ListItemIcon>
-                <ListItemText>{video.title}</ListItemText>
-              </ListItem>
-            ))}
-          </List>
+            <List className={classes.container}>
+              <Typography>Videos</Typography>
+              {videos.map((video, index) => (
+                  <ListItem key={index}>
+                    <ListItemIcon>
+                      <Avatar>
+                        <MovieIcon />
+                      </Avatar>
+                    </ListItemIcon>
+                    <ListItemText>{video.title}</ListItemText>
+                  </ListItem>
+              ))}
+            </List>
+          </div>
         </div>
+        <ReactToPdf
+            targetRef={pdfRef}
+            options={pdfOptions}
+            filename="Reporte.pdf"
+            x={1} y={1} scale={0.9}
+        >
+          {
+            (params: pdfParams) => {
+              return (
+                  <button onClick={params.toPdf}>Generate pdf</button>
+              );
+            }}
+        </ReactToPdf>
       </>
     );
 
