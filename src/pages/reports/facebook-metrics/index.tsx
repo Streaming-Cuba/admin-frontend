@@ -29,6 +29,8 @@ import { clearVideos } from "../../../redux/reducers/metrics";
 import ReactionTable from "../../../components/ReactionsTable";
 // @ts-ignore
 import ReactToPdf from "react-to-pdf"
+import { jsPDF } from "jspdf";
+//import html2canvas from "html2canvas"
 
 interface pdfParams {
   toPdf: () => any
@@ -223,10 +225,50 @@ function FacebookMetricsReport(): JSX.Element {
       }
   ), [])
 
+  const printDocument = async ()  => {
+    const input = document.getElementById('divToPrint');
+    const doc = new jsPDF();
+    doc.setLanguage("es");
+    await doc.html(input as HTMLElement, {
+      x: 0.6,
+      y: 0.6,
+      margin: [150, 150, 150, 150],
+      html2canvas: {
+        allowTaint: true,
+        async: true,
+        scale: 0.3,
+        useCORS: true,
+        scrollX: 30,
+        scrollY: 20,
+        taintTest: true,
+        letterRendering: false,
+      },
+      callback: (doc) => {
+        doc.save("test.pdf")
+      }
+    })
+
+
+    /*
+    html2canvas(input as HTMLElement)
+        .then((canvas) => {
+          console.log(canvas)
+          const imgData = canvas.toDataURL('image/png');
+          console.log(imgData)
+          const pdf = new jsPDF();
+          // @ts-ignore
+          pdf.addImage(imgData, 'JPEG', 0, 0);
+          // pdf.output('dataurlnewwindow');
+          pdf.save("download.pdf");
+        })
+    ;
+     */
+  }
+
   if (videos.length > 0)
     return (
       <>
-        <div ref={pdfRef}>
+        <div ref={pdfRef} id={"divToPrint"}>
           <PageTitle title="Estadíticas de Videos Seleccionados" />
           <div className={classes.layout}>
             <TableContainer className={classes.container}>
@@ -322,6 +364,7 @@ function FacebookMetricsReport(): JSX.Element {
               );
             }}
         </ReactToPdf>
+        <button onClick={printDocument}>Generar PDF a mano</button>
       </>
     );
 
