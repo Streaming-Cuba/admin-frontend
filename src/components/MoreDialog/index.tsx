@@ -51,17 +51,72 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
             {
                 currentPage === 1 && (
                     <>
-                        <DialogTitle>Estadísticas Demográficas</DialogTitle>
+                        <DialogTitle>Otras Estadísticas</DialogTitle>
                         <DialogContent>
-                            {
-                                !props.video.demographic["M.13-17"]? (
-                                    <Typography>
-                                        Este video no tiene estadísticas demográficas
-                                    </Typography>
-                                ) : (
-                                   <DemographyTable demographic={props.video.demographic} disableTitle />
-                                )
-                            }
+                            <Table>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>
+                                            Cantidad de Páginas Enlazadas:
+                                        </TableCell>
+                                        <TableCell>
+                                            {props.video.crosspost_count || 0}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Total de Paises:
+                                        </TableCell>
+                                        <TableCell>
+                                            {
+                                                Object
+                                                    .keys(props.video.ranking_by_country)
+                                                    .length
+                                            }
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Total de Regiones:
+                                        </TableCell>
+                                        <TableCell>
+                                            {
+                                                Object
+                                                    .keys(props.video.ranking_by_region)
+                                                    .length
+                                            }
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Total de Reacciones:
+                                        </TableCell>
+                                        <TableCell>
+                                            {
+                                                Object
+                                                    .values(props.video.reactions)
+                                                    .reduce((previousValue, currentValue) => previousValue + currentValue)
+                                            }
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Cantidad de Comentarios:
+                                        </TableCell>
+                                        <TableCell>
+                                            {props.video.comments || 0}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Cantidad de Veces Compartido:
+                                        </TableCell>
+                                        <TableCell>
+                                            {props.video.shares || 0}
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
                         </DialogContent>
                     </>
                 )
@@ -103,36 +158,17 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
             {
                 currentPage === 5 && (
                     <>
-                        <DialogTitle>Otras Estadísticas</DialogTitle>
+                        <DialogTitle>Estadísticas Demográficas</DialogTitle>
                         <DialogContent>
-                            <Table>
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell>
-                                            Cantidad de Comentarios:
-                                        </TableCell>
-                                        <TableCell>
-                                            {props.video.comments || 0}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>
-                                            Cantidad de Veces Compartido:
-                                        </TableCell>
-                                        <TableCell>
-                                            {props.video.shares || 0}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>
-                                            Cantidad de Páginas Enlazadas:
-                                        </TableCell>
-                                        <TableCell>
-                                            {props.video.crosspost_count || 0}
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
+                            {
+                                !props.video.demographic["M.13-17"]? (
+                                    <Typography>
+                                        Este video no tiene estadísticas demográficas
+                                    </Typography>
+                                ) : (
+                                    <DemographyTable demographic={props.video.demographic} disableTitle />
+                                )
+                            }
                         </DialogContent>
                     </>
                 )
