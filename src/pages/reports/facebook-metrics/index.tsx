@@ -222,12 +222,46 @@ function FacebookMetricsReport(): JSX.Element {
               </TableHead>
               <TableBody>
                 <TableRow>
+                  <TableCell>Cantidad de Publicaiones:</TableCell>
+                  <TableCell align="right">{videos.length}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Cantidad de Páginas Enlazadas:</TableCell>
+                  <TableCell align="right">{totals.crosspost_count}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>Alcance Total:</TableCell>
                   <TableCell align="right">{totals.reach}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Vistas Totales:</TableCell>
                   <TableCell align="right">{totals.views}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Total de Paises:</TableCell>
+                  <TableCell align="right">{Object.keys(totals.ranking_by_country).length}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Total de Regiones:</TableCell>
+                  <TableCell align="right">{Object.keys(totals.ranking_by_region).length}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Total de Reacciones:</TableCell>
+                  <TableCell align="right">
+                    {
+                      Object
+                          .values(totals.reactions)
+                          .reduce((previousValue, currentValue) => previousValue + currentValue)
+                    }
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Cantidad de Comentarios:</TableCell>
+                  <TableCell align="right">{totals.comments}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Cantidad de Veces Compartidos:</TableCell>
+                  <TableCell align="right">{totals.shares}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Duración Total:</TableCell>
@@ -239,17 +273,6 @@ function FacebookMetricsReport(): JSX.Element {
             </Table>
           </TableContainer>
           <TableContainer className={classes.container}>
-            {secondsToString(totals.demographic["F.13-17"]) ===
-            "NaN:NaN:NaN" ? (
-              <Typography>
-                Algunos de los videos seleccionados no tiene estadísticas
-                demográficas
-              </Typography>
-            ) : (
-              <DemographyTable demographic={totals.demographic} />
-            )}
-          </TableContainer>
-          <TableContainer className={classes.container}>
             <CountriesTopTable countries={totals.ranking_by_country} />
           </TableContainer>
           <TableContainer className={classes.container}>
@@ -259,25 +282,15 @@ function FacebookMetricsReport(): JSX.Element {
             <ReactionTable reactions={totals.reactions}/>
           </TableContainer>
           <TableContainer className={classes.container}>
-            <Table>
-              <TableHead>
-                <Typography>Otras Estadísticas</Typography>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Cantidad de Comentarios:</TableCell>
-                  <TableCell align="right">{totals.comments}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Cantidad de Veces Compartido:</TableCell>
-                  <TableCell align="right">{totals.shares}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Cantidad de Páginas Enlazadas:</TableCell>
-                  <TableCell align="right">{totals.crosspost_count}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+            {secondsToString(totals.demographic["F.13-17"]) ===
+            "NaN:NaN:NaN" ? (
+              <Typography>
+                Algunos de los videos seleccionados no tiene estadísticas
+                demográficas
+              </Typography>
+            ) : (
+              <DemographyTable demographic={totals.demographic} />
+            )}
           </TableContainer>
 
           <List className={classes.container}>

@@ -44,12 +44,6 @@ function CountriesTopTable({ countries, disableTitle }: CountriesTopTableProps) 
           }
       </TableHead>
       <TableBody>
-          <TableRow>
-              <TableCell>Total de Paises:</TableCell>
-              <TableCell align="right">
-                  {Object.keys(countries).length}
-              </TableCell>
-          </TableRow>
           {
               renderTopCountries()
           }

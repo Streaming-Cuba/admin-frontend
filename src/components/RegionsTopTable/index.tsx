@@ -23,12 +23,6 @@ function RegionsTopTable({ regions, disableTitle }: RegionsTopTableProps) {
           }
       </TableHead>
       <TableBody>
-          <TableRow>
-              <TableCell>Total de Regiones:</TableCell>
-              <TableCell align="right">
-                  {Object.keys(regions).length}
-              </TableCell>
-          </TableRow>
         {Object.keys(regions)
           .sort((a, b) => regions[b] - regions[a])
           .splice(0, 5)

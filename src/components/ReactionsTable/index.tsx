@@ -48,15 +48,6 @@ export default function ReactionTable ({ reactions, disableTitle }: ReactionsTab
                 }
             </TableHead>
             <TableBody>
-                <TableRow>
-                    <TableCell>Total de Reacciones:</TableCell>
-                    <TableCell align="right">
-                        {Object.values(reactions).reduce(
-                            (previousValue, currentValue) =>
-                                previousValue + currentValue
-                        )}
-                    </TableCell>
-                </TableRow>
                 {Object.keys(reactions).map((value, index) => (
                     <TableRow key={index}>
                         <TableCell className={classes.cellWithImg}>
