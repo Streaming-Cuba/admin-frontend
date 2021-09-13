@@ -18,7 +18,7 @@ import {
     KeyboardArrowRight as KeyboardArrowRightIcon
 } from "@material-ui/icons"
 import { TransitionProps } from '@material-ui/core/transitions';
-import Video from "../../types/Video";
+import VideoFB from "../../types/VideoFB";
 import DemographyTable from "../DemographyTable";
 import CountriesTopTable from "../CountriesTopTable";
 import RegionsTopTable from "../RegionsTopTable";
@@ -33,7 +33,7 @@ const Transition = React.forwardRef(function Transition(
 
 interface MoreDialogProps {
     isOpen: boolean,
-    video: Video,
+    video: VideoFB,
     onClose: () => void
 }
 

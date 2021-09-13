@@ -1,8 +1,8 @@
 import {createSlice} from "@reduxjs/toolkit"
-import Video from "../../types/Video"
+import VideoFB from "../../types/VideoFB"
 
 type SliceState = {
-    videos: Video[]
+    videos: VideoFB[]
 }
 
 const initialState: SliceState = {

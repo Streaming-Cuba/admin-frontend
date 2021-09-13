@@ -1,4 +1,4 @@
-import Video from "./Video";
+import VideoFB from "./VideoFB";
 
 type VideosInfo = {
     videos_count: number,
@@ -6,7 +6,7 @@ type VideosInfo = {
     total_views: number,
     total_countries: number,
     total_regions: number,
-    videos: Video[],
+    videos: VideoFB[],
     ranking_by_region: {[key: string]: number},
     ranking_by_country: {[key: string]: number}
 }

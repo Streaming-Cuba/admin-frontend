@@ -18,6 +18,7 @@ import { useServerManager } from "../../../components/ServerManagerProvider";
 import useStyles from "./styles";
 import Vote from "../../../types/Vote";
 import Event from "../../../types/Event";
+import Video from "../../../types/Video";
 
 function StatisticsVotes() {
   const classes = useStyles();
@@ -31,14 +32,22 @@ function StatisticsVotes() {
   const [currentPage, setCurrentPage] = useState(0);
   const [eventSelected, setEventSelected] = useState<string | null>(null);
   const [voteTypeSelected, setVoteTypeSelected] = useState<string | null>(null);
+  const [videos, setVideos] = useState<Video[]>([]);
 
   const loadVotes = useCallback(() => {
     if (eventSelected && voteTypeSelected) {
       setLoading(true);
       serverManager
-        .loadVotes(eventSelected, voteTypeSelected, pageSize)
+        .loadVotes(eventSelected, voteTypeSelected)
         .then((response) => {
+          const _videos: Video[] = []
+          response.data.forEach(item => {
+            _videos.push({
+              ...JSON.parse(item.metadata), count: item.count,  id: item.id
+            });
+          })
           setVotes(response.data)
+          setVideos(_videos)
         })
         .finally(() => {
           setLoading(false);
@@ -67,7 +76,37 @@ function StatisticsVotes() {
   }, [eventSelected, voteTypeSelected, pageSize, loadVotes]);
 
   const columns = useMemo<GridColDef[]>(() => {
-    return [
+    return eventSelected === "premioslucas2021"? [
+      { field: "id", headerName: "ID", flex: 0.3 },
+      {
+        field: "Number",
+        headerName: "Número",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 0.3,
+      },
+      {
+        field: "Title",
+        headerName: "Título",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 1,
+      },
+      {
+        field: "Author",
+        headerName: "Autor",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 1,
+      },
+      {
+        field: "count",
+        headerName: "Votos",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 0.3,
+      },
+    ] : [
       { field: "id", headerName: "ID", flex: 0.3 },
       {
         field: "groupItemName",
@@ -90,9 +129,9 @@ function StatisticsVotes() {
         sortable: false,
         flex: 0.3,
       },
-      
+
     ];
-  }, []);
+  }, [eventSelected]);
 
   return (
     <div>
@@ -138,7 +177,7 @@ function StatisticsVotes() {
 
       <div className={classes.dataGrid}>
         <DataGrid
-          rows={votes}
+          rows={eventSelected === "premioslucas2021"? videos :votes}
           columns={columns}
           rowCount={total}
           page={currentPage}
@@ -150,7 +189,7 @@ function StatisticsVotes() {
             setPageSize(params.pageSize);
           }}
           rowsPerPageOptions={[10, 25, 50]}
-          paginationMode="server"
+          paginationMode="client"
           pagination
           loading={isLoading}
           autoHeight
