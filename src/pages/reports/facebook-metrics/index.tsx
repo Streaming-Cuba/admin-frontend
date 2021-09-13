@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import PageTitle from "../../../components/PageTitle";
-import Video from "../../../types/Video";
+import VideoFB from "../../../types/VideoFB";
 import {Redirect} from "react-router-dom";
 import {Paths} from "../../";
 import useStyles from "./styles";
@@ -29,7 +29,7 @@ import { clearVideos } from "../../../redux/reducers/metrics";
 import ReactionTable from "../../../components/ReactionsTable";
 
 function FacebookMetricsReport(): JSX.Element {
-  const videos: Video[] = useAppSelector((state) => state.metrics.videos);
+  const videos: VideoFB[] = useAppSelector((state) => state.metrics.videos);
   const dispatch = useDispatch();
   const classes = useStyles();
 
