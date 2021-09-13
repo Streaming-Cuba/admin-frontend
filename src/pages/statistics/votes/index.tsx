@@ -41,9 +41,11 @@ function StatisticsVotes() {
         .loadVotes(eventSelected, voteTypeSelected)
         .then((response) => {
           const _videos: Video[] = []
-          response.data.forEach(item => {
+          response.data
+              .sort((a, b) => b.count - a.count)
+              .forEach((item, index) => {
             _videos.push({
-              ...JSON.parse(item.metadata), count: item.count,  id: item.id
+              ...JSON.parse(item.metadata), count: item.count,  id: item.id, index: index + 1
             });
           })
           setVotes(response.data)
@@ -77,7 +79,7 @@ function StatisticsVotes() {
 
   const columns = useMemo<GridColDef[]>(() => {
     return eventSelected === "premioslucas2021"? [
-      { field: "id", headerName: "ID", flex: 0.3 },
+      { field: "index", headerName: "Posición", flex: 0.3 },
       {
         field: "Number",
         headerName: "Número",
