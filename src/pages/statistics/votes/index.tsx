@@ -138,10 +138,10 @@ function StatisticsVotes() {
   }, [eventSelected]);
 
   const downloadVotes = () => {
-    const downloadData: string[] = []
-    videos.forEach(value => downloadData.push(`Posición: ${value.index},   Número: ${value.Number},   Votos: ${value.count},   Autor: ${value.Author},   Titulo: ${value.Title}\n`))
+    const downloadData: string[] = ["Posición\tNúmero\tVotos\tAutor\tTitulo\n"]
+    videos.forEach(value => downloadData.push(`${value.index}\t${value.Number}\t${value.count}\t${value.Author}\t${value.Title}\n`))
     const blob = new Blob(downloadData)
-    saveAs(blob, "Votaciones Premios Lucas 2021.txt")
+    saveAs(blob, `Votaciones Premios Lucas ${ new Date() } .txt`)
   }
 
   return (
