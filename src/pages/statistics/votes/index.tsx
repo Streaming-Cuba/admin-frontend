@@ -10,6 +10,7 @@ import {
 
 import PageTitle from "../../../components/PageTitle";
 import {
+  Assignment as AssignmentIcon,
   Refresh as RefreshIcon,
 } from "@material-ui/icons";
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
@@ -19,6 +20,7 @@ import useStyles from "./styles";
 import Vote from "../../../types/Vote";
 import Event from "../../../types/Event";
 import Video from "../../../types/Video";
+import { saveAs } from "file-saver"
 
 function StatisticsVotes() {
   const classes = useStyles();
@@ -135,9 +137,22 @@ function StatisticsVotes() {
     ];
   }, [eventSelected]);
 
+  const downloadVotes = () => {
+    const downloadData: string[] = []
+    videos.forEach(value => downloadData.push(`Posición: ${value.index},   Número: ${value.Number},   Votos: ${value.count},   Autor: ${value.Author},   Titulo: ${value.Title}\n`))
+    const blob = new Blob(downloadData)
+    saveAs(blob, "Votaciones Premios Lucas 2021.txt")
+  }
+
   return (
     <div>
       <PageTitle title="Estadisticas: Votos por evento">
+        {
+         videos.length > 0 &&
+         <IconButton onClick={downloadVotes}>
+           <AssignmentIcon />
+         </IconButton>
+        }
         <IconButton onClick={loadVotes}>
           <RefreshIcon />
         </IconButton>
