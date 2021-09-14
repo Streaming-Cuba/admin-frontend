@@ -98,7 +98,7 @@ function StatisticsVotes() {
       },
       {
         field: "Author",
-        headerName: "Autor",
+        headerName: "Intérprete",
         disableColumnMenu: true,
         sortable: false,
         flex: 1,
@@ -138,7 +138,7 @@ function StatisticsVotes() {
   }, [eventSelected]);
 
   const downloadVotes = () => {
-    const downloadData: string[] = ["Posición\tNúmero\tVotos\tAutor\tTitulo\n"]
+    const downloadData: string[] = ["Posición\tNúmero\tVotos\tInérprete\tTitulo\n"]
     videos.forEach(value => downloadData.push(`${value.index}\t${value.Number}\t${value.count}\t${value.Author}\t${value.Title}\n`))
     const blob = new Blob(downloadData)
     saveAs(blob, `Votaciones Premios Lucas ${ new Date() } .txt`)
