@@ -47,7 +47,7 @@ function StatisticsVotes() {
               .sort((a, b) => b.count - a.count)
               .forEach((item, index) => {
             _videos.push({
-              ...JSON.parse(item.metadata), count: item.count,  id: item.id, index: index + 1
+              ...JSON.parse(item.metadata), count: item.count,  id: index + 1
             });
           })
           setVotes(response.data)
@@ -81,7 +81,7 @@ function StatisticsVotes() {
 
   const columns = useMemo<GridColDef[]>(() => {
     return eventSelected === "premioslucas2021"? [
-      { field: "index", headerName: "Posición", flex: 0.3 },
+      { field: "id", headerName: "Posición", flex: 0.3 },
       {
         field: "Number",
         headerName: "Número",
@@ -139,7 +139,7 @@ function StatisticsVotes() {
 
   const downloadVotes = () => {
     const downloadData: string[] = ["Posición\tNúmero\tVotos\tInérprete\tTitulo\n"]
-    videos.forEach(value => downloadData.push(`${value.index}\t${value.Number}\t${value.count}\t${value.Author}\t${value.Title}\n`))
+    videos.forEach(value => downloadData.push(`${value.id}\t${value.Number}\t${value.count}\t${value.Author}\t${value.Title}\n`))
     const blob = new Blob(downloadData)
     saveAs(blob, `Votaciones Premios Lucas ${ new Date() } .txt`)
   }

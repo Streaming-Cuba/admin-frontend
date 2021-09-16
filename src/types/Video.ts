@@ -5,7 +5,6 @@ interface Video {
     Author: string;
     id: number;
     count: number;
-    index: number
 }
 
 export default Video;
