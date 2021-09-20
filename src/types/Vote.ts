@@ -9,6 +9,7 @@ type Vote = {
   interpreter: string;
   productor: string;
   type: string;
+  metadata: string;
 };
 
 export default Vote;

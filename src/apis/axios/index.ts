@@ -96,8 +96,8 @@ class ServerManager {
     return this.apiAxios.get(url);
   }
 
-  loadVotes(eventIdentifier: string, voteType: string, limit?: number) {
-    let url = `/api/v1/event/${eventIdentifier}/votes?type=${voteType}&limit=${limit}`;
+  loadVotes(eventIdentifier: string, voteType: string) {
+    let url = `/api/v1/event/${eventIdentifier}/votes?type=${voteType}`;
     return this.apiAxios.get<Vote[]>(url);
   }
 

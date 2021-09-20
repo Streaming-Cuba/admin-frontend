@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "1.5.1",
     "axios": "0.21.1",
     "clsx": "1.1.1",
+    "file-saver": "^2.0.5",
     "mdi-material-ui": "6.22.1",
     "notistack": "^1.0.9",
     "react": "17.0.2",
@@ -34,6 +35,7 @@
     "universal-cookie": "4.0.4"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.3",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-date-range": "^1.1.4",

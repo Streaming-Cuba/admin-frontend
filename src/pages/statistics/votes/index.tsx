@@ -10,6 +10,7 @@ import {
 
 import PageTitle from "../../../components/PageTitle";
 import {
+  Assignment as AssignmentIcon,
   Refresh as RefreshIcon,
 } from "@material-ui/icons";
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
@@ -18,6 +19,8 @@ import { useServerManager } from "../../../components/ServerManagerProvider";
 import useStyles from "./styles";
 import Vote from "../../../types/Vote";
 import Event from "../../../types/Event";
+import Video from "../../../types/Video";
+import { saveAs } from "file-saver"
 
 function StatisticsVotes() {
   const classes = useStyles();
@@ -31,14 +34,24 @@ function StatisticsVotes() {
   const [currentPage, setCurrentPage] = useState(0);
   const [eventSelected, setEventSelected] = useState<string | null>(null);
   const [voteTypeSelected, setVoteTypeSelected] = useState<string | null>(null);
+  const [videos, setVideos] = useState<Video[]>([]);
 
   const loadVotes = useCallback(() => {
     if (eventSelected && voteTypeSelected) {
       setLoading(true);
       serverManager
-        .loadVotes(eventSelected, voteTypeSelected, pageSize)
+        .loadVotes(eventSelected, voteTypeSelected)
         .then((response) => {
+          const _videos: Video[] = []
+          response.data
+              .sort((a, b) => b.count - a.count)
+              .forEach((item, index) => {
+            _videos.push({
+              ...JSON.parse(item.metadata), count: item.count,  id: index + 1
+            });
+          })
           setVotes(response.data)
+          setVideos(_videos)
         })
         .finally(() => {
           setLoading(false);
@@ -67,7 +80,37 @@ function StatisticsVotes() {
   }, [eventSelected, voteTypeSelected, pageSize, loadVotes]);
 
   const columns = useMemo<GridColDef[]>(() => {
-    return [
+    return eventSelected === "premioslucas2021"? [
+      { field: "id", headerName: "Posición", flex: 0.3 },
+      {
+        field: "Number",
+        headerName: "Número",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 0.3,
+      },
+      {
+        field: "Title",
+        headerName: "Título",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 1,
+      },
+      {
+        field: "Author",
+        headerName: "Intérprete",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 1,
+      },
+      {
+        field: "count",
+        headerName: "Votos",
+        disableColumnMenu: true,
+        sortable: false,
+        flex: 0.3,
+      },
+    ] : [
       { field: "id", headerName: "ID", flex: 0.3 },
       {
         field: "groupItemName",
@@ -90,13 +133,26 @@ function StatisticsVotes() {
         sortable: false,
         flex: 0.3,
       },
-      
+
     ];
-  }, []);
+  }, [eventSelected]);
+
+  const downloadVotes = () => {
+    const downloadData: string[] = ["Posición\tNúmero\tVotos\tInérprete\tTitulo\n"]
+    videos.forEach(value => downloadData.push(`${value.id}\t${value.Number}\t${value.count}\t${value.Author}\t${value.Title}\n`))
+    const blob = new Blob(downloadData)
+    saveAs(blob, `Votaciones Premios Lucas ${ new Date() } .txt`)
+  }
 
   return (
     <div>
       <PageTitle title="Estadisticas: Votos por evento">
+        {
+         videos.length > 0 &&
+         <IconButton onClick={downloadVotes}>
+           <AssignmentIcon />
+         </IconButton>
+        }
         <IconButton onClick={loadVotes}>
           <RefreshIcon />
         </IconButton>
@@ -138,7 +194,7 @@ function StatisticsVotes() {
 
       <div className={classes.dataGrid}>
         <DataGrid
-          rows={votes}
+          rows={eventSelected === "premioslucas2021"? videos :votes}
           columns={columns}
           rowCount={total}
           page={currentPage}
@@ -150,7 +206,7 @@ function StatisticsVotes() {
             setPageSize(params.pageSize);
           }}
           rowsPerPageOptions={[10, 25, 50]}
-          paginationMode="server"
+          paginationMode="client"
           pagination
           loading={isLoading}
           autoHeight

@@ -11,7 +11,7 @@ import {
 } from "@material-ui/pickers";
 import { useServerManager } from "../../../components/ServerManagerProvider";
 import { format, parseISO } from "date-fns";
-import Video from "../../../types/Video";
+import VideoFB from "../../../types/VideoFB";
 import VideosInfo from "../../../types/VideosInfo";
 import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 import MoreDialog from "../../../components/MoreDialog";
@@ -56,7 +56,7 @@ function Metrics() {
   });
   const [isOpenMoreDialog, setIsOpenMoreDialog] = useState<boolean>(false);
   const [isOpenTotalDialog, setIsOpenTotalDialog] = useState<boolean>(false);
-  const [videoToMore, setVideoToMore] = useState<Video>({
+  const [videoToMore, setVideoToMore] = useState<VideoFB>({
     reactions: {
       like: 0,
       love: 0,
@@ -156,7 +156,7 @@ function Metrics() {
           format(dateRange[1], "yyyy-MM-dd")
         )
         .then((r) => {
-          r.data.videos.forEach((video: Video, index) => {
+          r.data.videos.forEach((video: VideoFB, index) => {
             video.id = index;
             video.date = format(parseISO(video.date), "dd-MM-yyyy");
             video.duration = secondsToString(video.length);
@@ -270,7 +270,7 @@ function Metrics() {
         }}
         onCellClick={(param) => {
           if (param.field === "more") {
-            setVideoToMore(param.row as Video);
+            setVideoToMore(param.row as VideoFB);
             setIsOpenMoreDialog(true);
           }
         }}
