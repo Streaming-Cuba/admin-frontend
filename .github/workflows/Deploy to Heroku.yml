@@ -7,7 +7,7 @@ on:
 
 env: 
   REACT_APP_PLATFORM_URL: https://eventos.streamingcuba.com
-  REACT_APP_API_URL: https://apistreamingcuba.herokuapp.com
+  REACT_APP_API_URL: https://api.eventos.streamingcuba.com
 
 jobs:
   deploy:
