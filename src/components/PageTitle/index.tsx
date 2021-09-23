@@ -9,7 +9,7 @@ function PageTitle(props: {
   subtitle?: string;
   disableMarginBottom?: boolean
 }) {
-  var classes = useStyles();
+  const classes = useStyles();
 
   return (
     <div className={clsx(classes.pageTitleContainer, {

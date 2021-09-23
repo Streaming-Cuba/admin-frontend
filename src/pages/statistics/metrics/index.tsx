@@ -21,7 +21,6 @@ import {
   Assignment as AssignmentIcon,
 } from "@material-ui/icons";
 import useStyles from "./styles";
-import TotalDialog from "../../../components/TotalsDialog";
 import { useDispatch } from "react-redux";
 import {
   setVideoReports,
@@ -46,16 +45,9 @@ function Metrics() {
   const [dateRange, setDateRange] = useState<DateRange<any>>([null, null]);
   const [videosInfo, setVideosInfo] = useState<VideosInfo>({
     videos_count: 0,
-    total_reach: 0,
-    total_views: 0,
-    total_countries: 0,
-    total_regions: 0,
     videos: [],
-    ranking_by_region: {},
-    ranking_by_country: {},
   });
   const [isOpenMoreDialog, setIsOpenMoreDialog] = useState<boolean>(false);
-  const [isOpenTotalDialog, setIsOpenTotalDialog] = useState<boolean>(false);
   const [videoToMore, setVideoToMore] = useState<VideoFB>({
     reactions: {
       like: 0,
@@ -67,29 +59,14 @@ function Metrics() {
     },
     comments: 0,
     shares: 0,
-    demographic: {
-      "F.13-17": 0,
-      "F.18-24": 0,
-      "F.25-34": 0,
-      "F.35-44": 0,
-      "F.45-54": 0,
-      "F.55-64": 0,
-      "F.65+": 0,
-      "M.13-17": 0,
-      "M.18-24": 0,
-      "M.25-34": 0,
-      "M.35-44": 0,
-      "M.45-54": 0,
-      "M.55-64": 0,
-      "M.65+": 0,
-    },
     length: 0,
     reach: 0,
     views: 0,
     date: "",
     ranking_by_country: {},
     ranking_by_region: {},
-    crosspost_count: 0
+    crosspost_count: 0,
+    total_view_time: 0
   });
 
   const columns = useMemo<GridColDef[]>(() => {
@@ -168,13 +145,7 @@ function Metrics() {
           handleClickVariant("Error en el rango de fecha", "error")();
           setVideosInfo({
             videos_count: 0,
-            total_reach: 0,
-            total_views: 0,
-            total_countries: 0,
-            total_regions: 0,
             videos: [],
-            ranking_by_region: {},
-            ranking_by_country: {},
           });
         })
         .finally(() => setLoading(false));
@@ -199,14 +170,6 @@ function Metrics() {
                 <AssignmentIcon />
               </IconButton>
             )}
-            {/*
-            <Button
-              variant={"outlined"}
-              onClick={() => setIsOpenTotalDialog(true)}
-            >
-              Totales
-            </Button>
-            */}
           </>
         )}
         <IconButton onClick={loadInfo}>
@@ -217,11 +180,6 @@ function Metrics() {
         isOpen={isOpenMoreDialog}
         video={videoToMore}
         onClose={() => setIsOpenMoreDialog(false)}
-      />
-      <TotalDialog
-        videosInfo={videosInfo}
-        isOpen={isOpenTotalDialog}
-        onClose={() => setIsOpenTotalDialog(false)}
       />
       <Box marginBottom={5}>
         <Grid container spacing={4} className={classes.gridContainer}>
