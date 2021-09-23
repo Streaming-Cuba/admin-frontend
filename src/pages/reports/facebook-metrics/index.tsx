@@ -222,7 +222,7 @@ function FacebookMetricsReport(): JSX.Element {
                 <TableRow>
                   <TableCell>Minutos Totales reproducidos:</TableCell>
                   <TableCell align="right">
-                    {secondsToString(totals.total_view_time / 1000)}
+                    {secondsToString(totals.total_view_time / 1000 || 0)}
                   </TableCell>
                 </TableRow>
               </TableBody>
