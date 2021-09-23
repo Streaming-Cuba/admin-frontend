@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo} from "react";
 import {useAppSelector} from "../../../redux";
 import {
-  Avatar,
+  Avatar, IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -21,10 +21,12 @@ import {Paths} from "../../";
 import useStyles from "./styles";
 import {secondsToString,} from "../../../utils/FormatUtils";
 import {Movie as MovieIcon} from "mdi-material-ui";
+import {CloudDownload as CloudDownloadIcon} from "@material-ui/icons"
 import RegionsTopTable from "../../../components/RegionsTopTable";
 import CountriesTopTable from "../../../components/CountriesTopTable";
 import { clearVideos } from "../../../redux/reducers/metrics";
 import ReactionTable from "../../../components/ReactionsTable";
+import {saveAs} from "file-saver";
 
 function FacebookMetricsReport(): JSX.Element {
   const videos: VideoFB[] = useAppSelector((state) => state.metrics.videos);
@@ -144,6 +146,50 @@ function FacebookMetricsReport(): JSX.Element {
     }
   }, [videos])
 
+  const downloadStatistics = () => {
+    const downloadData: string[] = [
+        `Cantidad de Publicaiones:\t${videos.length}
+Cantidad de Páginas Enlazadas:\t${totals.crosspost_count}
+Alcance Total:\t${totals.reach}
+Vistas Totales:\t${totals.views}
+Total de Paises:\t${Object.keys(totals.ranking_by_country).length}
+Total de Regiones:\t${Object.keys(totals.ranking_by_region).length}
+Total de Reacciones:\t${Object.values(totals.reactions).reduce((previousValue, currentValue) => previousValue + currentValue)}
+Cantidad de Comentarios:\t${totals.comments}
+Cantidad de Veces Compartidos:\t${totals.shares}
+Duración Total:\t${totals.length}
+
+10 Paises con más tiempo de reproducción:
+${Object.keys(totals.ranking_by_country)[0]}
+${Object.keys(totals.ranking_by_country)[1]}
+${Object.keys(totals.ranking_by_country)[2]}
+${Object.keys(totals.ranking_by_country)[3]}
+${Object.keys(totals.ranking_by_country)[4]}
+${Object.keys(totals.ranking_by_country)[5]}
+${Object.keys(totals.ranking_by_country)[6]}
+${Object.keys(totals.ranking_by_country)[7]}
+${Object.keys(totals.ranking_by_country)[8]}
+${Object.keys(totals.ranking_by_country)[9]}
+
+10 Regiones con más tiempo de reproducción
+${Object.keys(totals.ranking_by_region)[0]}
+${Object.keys(totals.ranking_by_region)[1]}
+${Object.keys(totals.ranking_by_region)[2]}
+${Object.keys(totals.ranking_by_region)[3]}
+${Object.keys(totals.ranking_by_region)[4]}
+${Object.keys(totals.ranking_by_region)[5]}
+${Object.keys(totals.ranking_by_region)[6]}
+${Object.keys(totals.ranking_by_region)[7]}
+${Object.keys(totals.ranking_by_region)[8]}
+${Object.keys(totals.ranking_by_region)[9]}
+ 
+Reacciones:\n`
+    ]
+    Object.keys(totals.reactions).forEach(value => downloadData.push(`${value.charAt(0).toUpperCase() + value.slice(1)}:\t${totals.reactions[value]}\n`))
+    const blob = new Blob(downloadData)
+    saveAs(blob, `Estadisticas de FB ${ new Date() } .txt`)
+  }
+
   useEffect(() => (
       () => {
         dispatch(clearVideos());
@@ -153,7 +199,11 @@ function FacebookMetricsReport(): JSX.Element {
   if (videos.length > 0)
     return (
       <>
-        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n 140 páginas del Ministerio de Cultura y Medios de Comunicación"} />
+        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas del Ministerio de Cultura y Medios de Comunicación"} >
+          <IconButton onClick={() => downloadStatistics()}>
+            <CloudDownloadIcon/>
+          </IconButton>
+        </PageTitle>
         <div className={classes.layout}>
           <List className={classes.container}>
             <Typography>Videos</Typography>
