@@ -24,11 +24,9 @@ import useStyles from "./styles";
 import { useDispatch } from "react-redux";
 import {
   setVideoReports,
-  removeVideoReports,
 } from "../../../redux/reducers/metrics";
 import { useHistory } from "react-router";
 import { Paths } from "../..";
-import { useAppSelector } from "../../../redux";
 import { secondsToString } from "../../../utils/FormatUtils";
 
 function Metrics() {
@@ -37,12 +35,12 @@ function Metrics() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const videosToReport = useAppSelector((state) => state.metrics.videos.length);
 
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(500);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [dateRange, setDateRange] = useState<DateRange<any>>([null, null]);
+  const [selectionModel, setSelectionMode] = useState<number[]>([])
   const [videosInfo, setVideosInfo] = useState<VideosInfo>({
     videos_count: 0,
     videos: [],
@@ -74,7 +72,7 @@ function Metrics() {
       {
         field: "title",
         headerName: "Titulo",
-        disableColumnMenu: true,
+        disableColumnMenu: false,
         sortable: false,
         flex: 2,
       },
@@ -160,13 +158,23 @@ function Metrics() {
     loadInfo();
   };
 
+  const goToReport = () => {
+    selectionModel.forEach(id => {
+      videosInfo
+          .videos
+          .filter(video => video.id === id)
+          .forEach(video => dispatch(setVideoReports(video)))
+    })
+    history.push(Paths.MetricsReport)
+  }
+
   return (
     <div>
       <PageTitle title="Estadisticas: Métricas de Facebook">
         {videosInfo.videos_count > 0 && (
           <>
-            {videosToReport > 0 && (
-              <IconButton onClick={() => history.push(Paths.MetricsReport)}>
+            {selectionModel.length > 0 && (
+              <IconButton onClick={goToReport}>
                 <AssignmentIcon />
               </IconButton>
             )}
@@ -216,16 +224,12 @@ function Metrics() {
         onPageSizeChange={(params) => {
           setPageSize(params.pageSize);
         }}
-        rowsPerPageOptions={[10, 25, 50]}
+        rowsPerPageOptions={[500, 750, 1000]}
         pagination
         loading={isLoading}
         autoHeight
         disableSelectionOnClick
         checkboxSelection
-        onRowSelected={(param) => {
-          if (param.isSelected) dispatch(setVideoReports(param.data));
-          else dispatch(removeVideoReports(param.data));
-        }}
         onCellClick={(param) => {
           if (param.field === "more") {
             setVideoToMore(param.row as VideoFB);
@@ -236,6 +240,17 @@ function Metrics() {
           LoadingOverlay: GridLoadingOverlay,
           NoRowsOverlay: GridNoRowsOverlay,
         }}
+        filterMode={"client"}
+        filterModel={{
+          items: [
+            {
+              columnField: 'title',
+              operatorValue: 'contains',
+              value: ''
+            },
+          ],
+        }}
+        onSelectionModelChange={(params) => setSelectionMode(params.selectionModel as number[])}
       />
     </div>
   );

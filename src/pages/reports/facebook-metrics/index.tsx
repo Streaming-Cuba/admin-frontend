@@ -149,8 +149,10 @@ function FacebookMetricsReport(): JSX.Element {
   const downloadStatistics = () => {
     const downloadData: string[] = []
 
-    downloadData.push("Informe de Audiencia \nCadena StreamingCuba \n140 páginas del Ministerio de Cultura y Medios de Comunicación\n\n")
-    downloadData.push(`Cantidad de Publicaiones:\t${videos.length}\n`)
+    downloadData.push("Informe de Audiencia \nCadena StreamingCuba \n140 páginas de instituciones culturales y Medios de Comunicación\n\n")
+    downloadData.push("Videos\n")
+    videos.forEach(video => downloadData.push(`${video.title}\n`))
+    downloadData.push(`\nCantidad de Publicaiones:\t${videos.length}\n`)
     downloadData.push(`Cantidad de Páginas Enlazadas:\t${totals.crosspost_count}\n`)
     downloadData.push(`Alcance Total:\t${totals.reach}\n`)
     downloadData.push(`Vistas Totales:\t${totals.views}\n`)
@@ -187,7 +189,7 @@ function FacebookMetricsReport(): JSX.Element {
   if (videos.length > 0)
     return (
       <>
-        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas del Ministerio de Cultura y Medios de Comunicación"} >
+        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas de instituciones culturales y Medios de Comunicación"} >
           <IconButton onClick={() => downloadStatistics()}>
             <CloudDownloadIcon/>
           </IconButton>
@@ -258,7 +260,7 @@ function FacebookMetricsReport(): JSX.Element {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Minutos Totales reproducidos:</TableCell>
+                  <TableCell>Tiempo Total de Reproducción:</TableCell>
                   <TableCell align="right">
                     {secondsToString(totals.total_view_time / 1000 || 0)}
                   </TableCell>
