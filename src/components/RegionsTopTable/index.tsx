@@ -6,7 +6,6 @@ import {
   TableRow,
   TableCell,
 } from "@material-ui/core";
-import { secondsToString } from "../../utils/FormatUtils";
 import React from "react";
 
 type RegionsTopTableProps = {
@@ -19,20 +18,17 @@ function RegionsTopTable({ regions, disableTitle }: RegionsTopTableProps) {
     <Table>
       <TableHead>
           {
-             !disableTitle && <Typography>5 Regiones con más tiempo de reproducción</Typography>
+             !disableTitle && <Typography>10 Regiones con más tiempo de reproducción</Typography>
           }
       </TableHead>
       <TableBody>
         {Object.keys(regions)
           .sort((a, b) => regions[b] - regions[a])
-          .splice(0, 5)
+          .splice(0, 10)
           .map((value, index) => {
             return (
               <TableRow key={index}>
                 <TableCell>{value}</TableCell>
-                <TableCell align="right">
-                  {secondsToString(regions[value] / 1000)}
-                </TableCell>
               </TableRow>
             );
           })}
