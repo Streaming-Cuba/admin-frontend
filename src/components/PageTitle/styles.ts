@@ -14,6 +14,7 @@ export default makeStyles((theme: Theme) => ({
   },
   typo: {
     color: theme.palette.text.hint,
+    whiteSpace: "pre"
   },
   grow: {
     flexGrow: 1

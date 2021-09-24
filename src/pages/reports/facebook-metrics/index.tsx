@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo} from "react";
 import {useAppSelector} from "../../../redux";
 import {
-  Avatar,
+  Avatar, IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -10,7 +10,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Typography,
 } from "@material-ui/core";
@@ -22,11 +21,12 @@ import {Paths} from "../../";
 import useStyles from "./styles";
 import {secondsToString,} from "../../../utils/FormatUtils";
 import {Movie as MovieIcon} from "mdi-material-ui";
-import DemographyTable from "../../../components/DemographyTable";
+import {CloudDownload as CloudDownloadIcon} from "@material-ui/icons"
 import RegionsTopTable from "../../../components/RegionsTopTable";
 import CountriesTopTable from "../../../components/CountriesTopTable";
 import { clearVideos } from "../../../redux/reducers/metrics";
 import ReactionTable from "../../../components/ReactionsTable";
+import {saveAs} from "file-saver";
 
 function FacebookMetricsReport(): JSX.Element {
   const videos: VideoFB[] = useAppSelector((state) => state.metrics.videos);
@@ -112,53 +112,10 @@ function FacebookMetricsReport(): JSX.Element {
             length: previousValue.length + currentValue.length,
             views: previousValue.views + currentValue.views,
             reach: previousValue.reach + currentValue.reach,
-            demographic: {
-              "F.13-17":
-                  previousValue.demographic["F.13-17"] +
-                  currentValue.demographic["F.13-17"],
-              "F.18-24":
-                  previousValue.demographic["F.18-24"] +
-                  currentValue.demographic["F.18-24"],
-              "F.25-34":
-                  previousValue.demographic["F.25-34"] +
-                  currentValue.demographic["F.25-34"],
-              "F.35-44":
-                  previousValue.demographic["F.35-44"] +
-                  currentValue.demographic["F.35-44"],
-              "F.45-54":
-                  previousValue.demographic["F.45-54"] +
-                  currentValue.demographic["F.45-54"],
-              "F.55-64":
-                  previousValue.demographic["F.55-64"] +
-                  currentValue.demographic["F.55-64"],
-              "F.65+":
-                  previousValue.demographic["F.65+"] +
-                  currentValue.demographic["F.65+"],
-              "M.13-17":
-                  previousValue.demographic["M.13-17"] +
-                  currentValue.demographic["M.13-17"],
-              "M.18-24":
-                  previousValue.demographic["M.18-24"] +
-                  currentValue.demographic["M.18-24"],
-              "M.25-34":
-                  previousValue.demographic["M.25-34"] +
-                  currentValue.demographic["M.25-34"],
-              "M.35-44":
-                  previousValue.demographic["M.35-44"] +
-                  currentValue.demographic["M.35-44"],
-              "M.45-54":
-                  previousValue.demographic["M.45-54"] +
-                  currentValue.demographic["M.45-54"],
-              "M.55-64":
-                  previousValue.demographic["M.55-64"] +
-                  currentValue.demographic["M.55-64"],
-              "M.65+":
-                  previousValue.demographic["M.65+"] +
-                  currentValue.demographic["M.65+"],
-            },
             comments: previousValue.comments + currentValue.comments,
             shares: previousValue.shares + currentValue.shares,
-            crosspost_count: previousValue.crosspost_count + currentValue.crosspost_count,
+            total_view_time: previousValue.total_view_time + currentValue.total_view_time,
+            crosspost_count: previousValue.crosspost_count > currentValue.crosspost_count? previousValue.crosspost_count : currentValue.crosspost_count,
             reactions: newReactions,
             ranking_by_country: newCountries,
             ranking_by_region: newRegion,
@@ -168,41 +125,58 @@ function FacebookMetricsReport(): JSX.Element {
       }
 
     return {
-        length: 0,
-        reach: 0,
-        views: 0,
-        date: "",
-        demographic: {
-          "F.13-17": 0,
-          "F.18-24": 0,
-          "F.25-34": 0,
-          "F.35-44": 0,
-          "F.45-54": 0,
-          "F.55-64": 0,
-          "F.65+": 0,
-          "M.13-17": 0,
-          "M.18-24": 0,
-          "M.25-34": 0,
-          "M.35-44": 0,
-          "M.45-54": 0,
-          "M.55-64": 0,
-          "M.65+": 0,
-        },
-        ranking_by_country: {},
-        ranking_by_region: {},
-        reactions: {
-          love: 0,
-          like: 0,
-          haha: 0,
-          wow: 0,
-          sorry: 0,
-          angry: 0,
-        },
-        shares: 0,
-        comments: 0,
+      length: 0,
+      reach: 0,
+      views: 0,
+      date: "",
+      ranking_by_country: {},
+      ranking_by_region: {},
+      reactions: {
+        love: 0,
+        like: 0,
+        haha: 0,
+        wow: 0,
+        sorry: 0,
+        angry: 0,
+      },
+      shares: 0,
+      comments: 0,
       crosspost_count: 0,
-      }
-  }, [])
+      total_view_time: 0
+    }
+  }, [videos])
+
+  const downloadStatistics = () => {
+    const downloadData: string[] = []
+
+    downloadData.push("Informe de Audiencia \nCadena StreamingCuba \n140 páginas del Ministerio de Cultura y Medios de Comunicación\n\n")
+    downloadData.push(`Cantidad de Publicaiones:\t${videos.length}\n`)
+    downloadData.push(`Cantidad de Páginas Enlazadas:\t${totals.crosspost_count}\n`)
+    downloadData.push(`Alcance Total:\t${totals.reach}\n`)
+    downloadData.push(`Vistas Totales:\t${totals.views}\n`)
+    downloadData.push(`Total de Paises:\t${Object.keys(totals.ranking_by_country).length}\n`)
+    downloadData.push(`Total de Regiones:\t${Object.keys(totals.ranking_by_region).length}\n`)
+    downloadData.push(`Total de Reacciones:\t${Object.values(totals.reactions).reduce((previousValue, currentValue) => previousValue + currentValue)}\n`)
+    downloadData.push(`Cantidad de Comentarios:\t${totals.comments}\n`)
+    downloadData.push(`Cantidad de Veces Compartidos:\t${totals.shares}\n`)
+    downloadData.push(`Duración Total:\t${secondsToString(totals.length)}\n`)
+    downloadData.push(`Minutos Totales reproducidos:\t${secondsToString(totals.total_view_time / 1000 || 0)}\n`)
+    downloadData.push("\n10 Paises con más tiempo de reproducción:\n")
+    Object.keys(totals.ranking_by_country)
+        .sort((a, b) => totals.ranking_by_country[b] - totals.ranking_by_country[a])
+        .splice(0, 10)
+        .forEach(value => downloadData.push(`${value}\n`))
+    downloadData.push("\n10 Regiones con más tiempo de reproducción:\n")
+    Object.keys(totals.ranking_by_region)
+        .sort((a, b) => totals.ranking_by_region[b] - totals.ranking_by_region[a])
+        .splice(0, 10)
+        .forEach(value => downloadData.push(`${value}\n`))
+    downloadData.push("\nReacciones:\n")
+    Object.keys(totals.reactions).forEach(value => downloadData.push(`${value.charAt(0).toUpperCase() + value.slice(1)}:\t${totals.reactions[value]}\n`))
+
+    const blob = new Blob(downloadData)
+    saveAs(blob, `Estadisticas de FB ${ new Date() } .txt`)
+  }
 
   useEffect(() => (
       () => {
@@ -213,16 +187,30 @@ function FacebookMetricsReport(): JSX.Element {
   if (videos.length > 0)
     return (
       <>
-        <PageTitle title="Estadíticas de Videos Seleccionados" />
+        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas del Ministerio de Cultura y Medios de Comunicación"} >
+          <IconButton onClick={() => downloadStatistics()}>
+            <CloudDownloadIcon/>
+          </IconButton>
+        </PageTitle>
         <div className={classes.layout}>
+          <List className={classes.container}>
+            <Typography>Videos</Typography>
+            {videos.map((video, index) => (
+                <ListItem key={index}>
+                  <ListItemIcon>
+                    <Avatar>
+                      <MovieIcon />
+                    </Avatar>
+                  </ListItemIcon>
+                  <ListItemText>{video.title}</ListItemText>
+                </ListItem>
+            ))}
+          </List>
           <TableContainer className={classes.container}>
             <Table title="Totales">
-              <TableHead>
-                <Typography>Totales</Typography>
-              </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell>Cantidad de Publicaiones:</TableCell>
+                  <TableCell>Cantidad de Publicaciones:</TableCell>
                   <TableCell align="right">{videos.length}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -234,7 +222,7 @@ function FacebookMetricsReport(): JSX.Element {
                   <TableCell align="right">{totals.reach}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Vistas Totales:</TableCell>
+                  <TableCell>Reproducciones:</TableCell>
                   <TableCell align="right">{totals.views}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -269,6 +257,12 @@ function FacebookMetricsReport(): JSX.Element {
                     {secondsToString(totals.length)}
                   </TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell>Minutos Totales reproducidos:</TableCell>
+                  <TableCell align="right">
+                    {secondsToString(totals.total_view_time / 1000 || 0)}
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
@@ -281,31 +275,6 @@ function FacebookMetricsReport(): JSX.Element {
           <TableContainer className={classes.container}>
             <ReactionTable reactions={totals.reactions}/>
           </TableContainer>
-          <TableContainer className={classes.container}>
-            {secondsToString(totals.demographic["F.13-17"]) ===
-            "NaN:NaN:NaN" ? (
-              <Typography>
-                Algunos de los videos seleccionados no tiene estadísticas
-                demográficas
-              </Typography>
-            ) : (
-              <DemographyTable demographic={totals.demographic} />
-            )}
-          </TableContainer>
-
-          <List className={classes.container}>
-            <Typography>Videos</Typography>
-            {videos.map((video, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  <Avatar>
-                    <MovieIcon />
-                  </Avatar>
-                </ListItemIcon>
-                <ListItemText>{video.title}</ListItemText>
-              </ListItem>
-            ))}
-          </List>
         </div>
       </>
     );

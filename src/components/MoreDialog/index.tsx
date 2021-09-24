@@ -10,7 +10,6 @@ import {
     TableRow,
     Table,
     TableBody,
-    Typography,
     IconButton
 } from "@material-ui/core";
 import {
@@ -19,10 +18,10 @@ import {
 } from "@material-ui/icons"
 import { TransitionProps } from '@material-ui/core/transitions';
 import VideoFB from "../../types/VideoFB";
-import DemographyTable from "../DemographyTable";
 import CountriesTopTable from "../CountriesTopTable";
 import RegionsTopTable from "../RegionsTopTable";
 import ReactionTable from "../ReactionsTable";
+import {secondsToString} from "../../utils/FormatUtils";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -115,6 +114,14 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                                             {props.video.shares || 0}
                                         </TableCell>
                                     </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            Minutos Totales reproducidos:
+                                        </TableCell>
+                                        <TableCell >
+                                            {secondsToString(props.video.total_view_time / 1000 || 0)}
+                                        </TableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </DialogContent>
@@ -125,7 +132,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                 currentPage === 2 && (
                     <>
                         <DialogTitle>
-                            5 Paises con más tiempo de reproducción
+                            10 Paises con más tiempo de reproducción
                         </DialogTitle>
                         <DialogContent>
                             <CountriesTopTable countries={props.video.ranking_by_country} disableTitle/>
@@ -137,7 +144,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                 currentPage === 3 && (
                     <>
                         <DialogTitle>
-                            5 Regiones con más tiempo de reproducción
+                            10 Regiones con más tiempo de reproducción
                         </DialogTitle>
                         <DialogContent>
                             <RegionsTopTable regions={props.video.ranking_by_region} disableTitle/>
@@ -155,24 +162,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                     </>
                 )
             }
-            {
-                currentPage === 5 && (
-                    <>
-                        <DialogTitle>Estadísticas Demográficas</DialogTitle>
-                        <DialogContent>
-                            {
-                                !props.video.demographic["M.13-17"]? (
-                                    <Typography>
-                                        Este video no tiene estadísticas demográficas
-                                    </Typography>
-                                ) : (
-                                    <DemographyTable demographic={props.video.demographic} disableTitle />
-                                )
-                            }
-                        </DialogContent>
-                    </>
-                )
-            }
+
             <DialogActions>
                 <IconButton
                     onClick={() => setCurrentPage(prevState => prevState - 1)}
@@ -182,7 +172,7 @@ export default function MoreDialog (props: MoreDialogProps): JSX.Element {
                 </IconButton>
                 <IconButton
                     onClick={() => setCurrentPage(prevState => prevState + 1)}
-                    disabled={currentPage === 5}
+                    disabled={currentPage === 4}
                 >
                     <KeyboardArrowRightIcon/>
                 </IconButton>

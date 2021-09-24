@@ -21,7 +21,7 @@ function CountriesTopTable({ countries, disableTitle }: CountriesTopTableProps) 
   const renderTopCountries = () => {
     let topCountries = Object.keys(countries)
       .sort((a, b) => countries[b] - countries[a])
-      .splice(0, 5);
+      .splice(0, 10);
 
     return topCountries.map((value, index) => {
       return (
@@ -30,7 +30,6 @@ function CountriesTopTable({ countries, disableTitle }: CountriesTopTableProps) 
             <img src={getFlagUrlByCountry(value)} />
             {value}
           </TableCell>
-          <TableCell align="right">{secondsToString(countries[value] * 60)}</TableCell>
         </TableRow>
       );
     });
@@ -40,7 +39,7 @@ function CountriesTopTable({ countries, disableTitle }: CountriesTopTableProps) 
     <Table>
       <TableHead>
           {
-             !disableTitle && <Typography>5 Paises con más tiempo de reproducción</Typography>
+             !disableTitle && <Typography>10 Paises con más tiempo de reproducción</Typography>
           }
       </TableHead>
       <TableBody>
