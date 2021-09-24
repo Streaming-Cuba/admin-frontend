@@ -149,7 +149,7 @@ function FacebookMetricsReport(): JSX.Element {
   const downloadStatistics = () => {
     const downloadData: string[] = []
 
-    downloadData.push("Informe de Audiencia \nCadena StreamingCuba \n140 páginas del Ministerio de Cultura y Medios de Comunicación\n\n")
+    downloadData.push("Informe de Audiencia \nCadena StreamingCuba \n140 páginas de instituciones culturales y Medios de Comunicación\n\n")
     downloadData.push("Videos\n")
     videos.forEach(video => downloadData.push(`${video.title}\n`))
     downloadData.push(`\nCantidad de Publicaiones:\t${videos.length}\n`)
@@ -189,7 +189,7 @@ function FacebookMetricsReport(): JSX.Element {
   if (videos.length > 0)
     return (
       <>
-        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas del Ministerio de Cultura y Medios de Comunicación"} >
+        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas de instituciones culturales y Medios de Comunicación"} >
           <IconButton onClick={() => downloadStatistics()}>
             <CloudDownloadIcon/>
           </IconButton>

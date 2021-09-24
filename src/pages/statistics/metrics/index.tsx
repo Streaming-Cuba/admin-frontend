@@ -74,7 +74,7 @@ function Metrics() {
       {
         field: "title",
         headerName: "Titulo",
-        disableColumnMenu: true,
+        disableColumnMenu: false,
         sortable: false,
         flex: 2,
       },
@@ -235,6 +235,16 @@ function Metrics() {
         components={{
           LoadingOverlay: GridLoadingOverlay,
           NoRowsOverlay: GridNoRowsOverlay,
+        }}
+        filterMode={"client"}
+        filterModel={{
+          items: [
+            {
+              columnField: 'title',
+              operatorValue: 'contains',
+              value: ''
+            },
+          ],
         }}
       />
     </div>
