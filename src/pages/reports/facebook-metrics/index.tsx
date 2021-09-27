@@ -149,31 +149,31 @@ function FacebookMetricsReport(): JSX.Element {
   const downloadStatistics = () => {
     const downloadData: string[] = []
 
-    downloadData.push("Informe de Audiencia \nCadena StreamingCuba \n140 páginas de instituciones culturales y Medios de Comunicación\n\n")
+    downloadData.push("Informe de Audiencia \nCadena StreamingCuba \n140 páginas de Instituciones Culturales y Medios de Comunicación\n\n")
     downloadData.push("Videos\n")
     videos.forEach(video => downloadData.push(`${video.title}\n`))
-    downloadData.push(`\nCantidad de Publicaiones:\t${videos.length}\n`)
-    downloadData.push(`Cantidad de Páginas Enlazadas:\t${totals.crosspost_count}\n`)
-    downloadData.push(`Alcance Total:\t${totals.reach}\n`)
-    downloadData.push(`Vistas Totales:\t${totals.views}\n`)
-    downloadData.push(`Total de Paises:\t${Object.keys(totals.ranking_by_country).length}\n`)
-    downloadData.push(`Total de Regiones:\t${Object.keys(totals.ranking_by_region).length}\n`)
-    downloadData.push(`Total de Reacciones:\t${Object.values(totals.reactions).reduce((previousValue, currentValue) => previousValue + currentValue)}\n`)
-    downloadData.push(`Cantidad de Comentarios:\t${totals.comments}\n`)
-    downloadData.push(`Cantidad de Veces Compartidos:\t${totals.shares}\n`)
-    downloadData.push(`Duración Total:\t${secondsToString(totals.length)}\n`)
-    downloadData.push(`Minutos Totales reproducidos:\t${secondsToString(totals.total_view_time / 1000 || 0)}\n`)
-    downloadData.push("\n10 Paises con más tiempo de reproducción:\n")
+    downloadData.push(`\nCantidad de Publicaciones\t${videos.length}\n`)
+    downloadData.push(`Cantidad de Páginas Enlazadas\t${totals.crosspost_count}\n`)
+    downloadData.push(`Alcance Total\t${totals.reach}\n`)
+    downloadData.push(`Reproducciones\t${totals.views}\n`)
+    downloadData.push(`Total de Países\t${Object.keys(totals.ranking_by_country).length}\n`)
+    downloadData.push(`Total de Regiones\t${Object.keys(totals.ranking_by_region).length}\n`)
+    downloadData.push(`Total de Reacciones\t${Object.values(totals.reactions).reduce((previousValue, currentValue) => previousValue + currentValue)}\n`)
+    downloadData.push(`Cantidad de Comentarios\t${totals.comments}\n`)
+    downloadData.push(`Cantidad de Veces Compartidos\t${totals.shares}\n`)
+    downloadData.push(`Duración Total\t${secondsToString(totals.length)}\n`)
+    downloadData.push(`Tiempo Total de Reproducidos\t${secondsToString(totals.total_view_time / 1000 || 0)}\n`)
+    downloadData.push("\n10 Paises con más tiempo de reproducción\n")
     Object.keys(totals.ranking_by_country)
         .sort((a, b) => totals.ranking_by_country[b] - totals.ranking_by_country[a])
         .splice(0, 10)
         .forEach(value => downloadData.push(`${value}\n`))
-    downloadData.push("\n10 Regiones con más tiempo de reproducción:\n")
+    downloadData.push("\n10 Regiones con más tiempo de reproducción\n")
     Object.keys(totals.ranking_by_region)
         .sort((a, b) => totals.ranking_by_region[b] - totals.ranking_by_region[a])
         .splice(0, 10)
         .forEach(value => downloadData.push(`${value}\n`))
-    downloadData.push("\nReacciones:\n")
+    downloadData.push("\nReacciones\n")
     Object.keys(totals.reactions).forEach(value => downloadData.push(`${value.charAt(0).toUpperCase() + value.slice(1)}:\t${totals.reactions[value]}\n`))
 
     const blob = new Blob(downloadData)
@@ -189,7 +189,7 @@ function FacebookMetricsReport(): JSX.Element {
   if (videos.length > 0)
     return (
       <>
-        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas de instituciones culturales y Medios de Comunicación"} >
+        <PageTitle title={"Informe de Audiencia \nCadena StreamingCuba \n140 páginas de Instituciones Culturales y Medios de Comunicación"} >
           <IconButton onClick={() => downloadStatistics()}>
             <CloudDownloadIcon/>
           </IconButton>
@@ -228,7 +228,7 @@ function FacebookMetricsReport(): JSX.Element {
                   <TableCell align="right">{totals.views}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Total de Paises:</TableCell>
+                  <TableCell>Total de Países:</TableCell>
                   <TableCell align="right">{Object.keys(totals.ranking_by_country).length}</TableCell>
                 </TableRow>
                 <TableRow>
