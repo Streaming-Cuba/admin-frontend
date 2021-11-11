@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import GridLoadingOverlay from "../../../components/Grid/LoadingOverlay";
 import GridNoRowsOverlay from "../../../components/Grid/NoRowsOverlay";
-import { DataGrid, GridColDef } from "@material-ui/data-grid";
+import {
+  DataGrid,
+  GridColDef, GridRowId
+} from "@material-ui/data-grid";
 import PageTitle from "../../../components/PageTitle";
 import { Box, Grid, IconButton, TextField } from "@material-ui/core";
 import {
@@ -19,6 +22,8 @@ import {
   MoreVert as MoreVertIcon,
   Refresh as RefreshIcon,
   Assignment as AssignmentIcon,
+    Search as SearchIcon,
+    Clear as ClearIcon
 } from "@material-ui/icons";
 import useStyles from "./styles";
 import { useDispatch } from "react-redux";
@@ -28,6 +33,42 @@ import {
 import { useHistory } from "react-router";
 import { Paths } from "../..";
 import { secondsToString } from "../../../utils/FormatUtils";
+
+interface QuickSearchToolbarProps {
+  clearSearch: () => void;
+  onChange: () => void;
+  value: string;
+}
+
+function QuickSearchToolbar(props: QuickSearchToolbarProps) {
+  const classes = useStyles();
+
+  return (
+      <div className={classes.root}>
+        <TextField
+            variant="standard"
+            value={props.value}
+            onChange={props.onChange}
+            placeholder="Search…"
+            className={classes.textField}
+            InputProps={{
+              startAdornment: <SearchIcon fontSize="small" />,
+              endAdornment: (
+                  <IconButton
+                      title="Clear"
+                      aria-label="Clear"
+                      size="small"
+                      style={{ visibility: props.value ? 'visible' : 'hidden' }}
+                      onClick={props.clearSearch}
+                  >
+                    <ClearIcon fontSize="small" />
+                  </IconButton>
+              ),
+            }}
+        />
+      </div>
+  );
+}
 
 function Metrics() {
   const serverManager = useServerManager();
@@ -40,7 +81,7 @@ function Metrics() {
   const [pageSize, setPageSize] = useState<number>(500);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [dateRange, setDateRange] = useState<DateRange<any>>([null, null]);
-  const [selectionModel, setSelectionMode] = useState<number[]>([])
+  const [selectionModel, setSelectionMode] = useState<GridRowId[]>([])
   const [videosInfo, setVideosInfo] = useState<VideosInfo>({
     videos_count: 0,
     videos: [],
@@ -66,13 +107,15 @@ function Metrics() {
     crosspost_count: 0,
     total_view_time: 0
   });
+  const [searchText, setSearchText] = useState<string>('');
+  const [rows, setRows] = useState<VideoFB[]>([])
 
   const columns = useMemo<GridColDef[]>(() => {
     return [
       {
         field: "title",
         headerName: "Titulo",
-        disableColumnMenu: false,
+        disableColumnMenu: true,
         sortable: false,
         flex: 2,
       },
@@ -138,6 +181,7 @@ function Metrics() {
             video.more = "Más";
           });
           setVideosInfo(r.data);
+          setRows(r.data.videos);
         })
         .catch(() => {
           handleClickVariant("Error en el rango de fecha", "error")();
@@ -167,6 +211,19 @@ function Metrics() {
     })
     history.push(Paths.MetricsReport)
   }
+
+  function escapeRegExp(value: string): string {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
+
+  const requestSearch = (searchValue: string) => {
+    setSearchText(searchValue);
+    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+    const filteredRows = videosInfo.videos.filter((video: VideoFB) => {
+      return searchRegex.test(video?.title as string);
+    });
+    setRows(filteredRows);
+  };
 
   return (
     <div>
@@ -213,7 +270,7 @@ function Metrics() {
         </Grid>
       </Box>
       <DataGrid
-        rows={videosInfo.videos}
+        rows={rows}
         columns={columns}
         rowCount={videosInfo.videos_count}
         page={currentPage}
@@ -239,6 +296,7 @@ function Metrics() {
         components={{
           LoadingOverlay: GridLoadingOverlay,
           NoRowsOverlay: GridNoRowsOverlay,
+          Toolbar: QuickSearchToolbar
         }}
         filterMode={"client"}
         filterModel={{
@@ -250,7 +308,15 @@ function Metrics() {
             },
           ],
         }}
-        onSelectionModelChange={(params) => setSelectionMode(params.selectionModel as number[])}
+        componentsProps={{
+          toolbar: {
+            value: searchText,
+            onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
+                requestSearch(event.target.value),
+            clearSearch: () => requestSearch(''),
+          },
+        }}
+        onSelectionModelChange={(params) => setSelectionMode(params.selectionModel)}
       />
     </div>
   );
