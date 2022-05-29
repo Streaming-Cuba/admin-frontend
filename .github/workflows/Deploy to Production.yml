@@ -22,7 +22,7 @@ jobs:
          node-version: 14.x
          
       - name: Installing dependencies 🏗
-        run: npm install 
+        run: yarn 
 
       - name: Create env variables
         run: |
@@ -32,7 +32,7 @@ jobs:
       - name: Building 🛠
         env: 
           CI: false
-        run: npm run build
+        run: yarn build
 
       - name: Copying build assets
         uses: garygrossgarten/github-action-scp@release
