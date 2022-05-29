@@ -16,24 +16,27 @@ import ConfirmAccount from "./pages/confirm-account";
 
 function App() {
   return (
-    <LocalizationProvider dateAdapter={DateFnsAdapter} locale={esLocale}>
-      <Provider store={store}>
-        <ServerManagerProvider>
-          <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={DateFnsAdapter} locale={esLocale}>
+        <Provider store={store}>
+          <ServerManagerProvider>
             <>
               <CssBaseline />
               <BrowserRouter>
                 <Switch>
                   <PublicRoute component={SignIn} path={Paths.SignIn} />
-                  <PublicRoute component={ConfirmAccount} path={Paths.ConfirmAccount} />
+                  <PublicRoute
+                    component={ConfirmAccount}
+                    path={Paths.ConfirmAccount}
+                  />
                   <PrivateRoute component={Layout} />
                 </Switch>
               </BrowserRouter>
             </>
-          </ThemeProvider>
-        </ServerManagerProvider>
-      </Provider>
-    </LocalizationProvider>
+          </ServerManagerProvider>
+        </Provider>
+      </LocalizationProvider>
+    </ThemeProvider>
   );
 }
 

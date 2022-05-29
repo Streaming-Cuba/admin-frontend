@@ -29,7 +29,7 @@ function StatisticsVotes() {
   const [isLoading, setLoading] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [votes, setVotes] = useState<Vote[]>([]);
-  const [total, setTotal] = useState<number>(0);
+  const [total] = useState<number>(0);
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(0);
   const [eventSelected, setEventSelected] = useState<string | null>(null);
@@ -57,7 +57,7 @@ function StatisticsVotes() {
           setLoading(false);
         });
     }
-  }, [eventSelected, pageSize, serverManager, voteTypeSelected]);
+  }, [eventSelected, serverManager, voteTypeSelected]);
 
   const loadEvents = useCallback(() => {
     setLoading(true);
@@ -138,8 +138,9 @@ function StatisticsVotes() {
   }, [eventSelected]);
 
   const downloadVotes = () => {
-    const downloadData: string[] = ["Posición\tNúmero\tVotos\tInérprete\tTitulo\n"]
-    videos.forEach(value => downloadData.push(`${value.id}\t${value.Number}\t${value.count}\t${value.Author}\t${value.Title}\n`))
+    const downloadData: string[] = ["Posición\tVotos\tInérprete\tTitulo\n"]
+    votes.sort((a, b) => b.count - a.count).forEach((item, index) => {downloadData.push(`${index+1}\t${item.count}\t${JSON.parse(item.metadata).interpreter}\t${item.groupItemName}\n`)})
+    // videos.forEach(value => downloadData.push(`${value.id}\t${value.count}\t${value.Author}\t${value.Title}\n`))
     const blob = new Blob(downloadData)
     saveAs(blob, `Votaciones Premios Lucas ${ new Date() } .txt`)
   }
